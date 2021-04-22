@@ -1,66 +1,88 @@
 import {JetView} from "webix-jet";
 
+import activities from "../../models/activities";
+import activityTypes from "../../models/activityTypes";
+import contacts from "../../models/contacts";
+
 export default class PopupView extends JetView {
-	constructor(app, name, data, type) {
+	constructor(app, name, id) {
 		super(app, name);
-		this.data = data;
-		this.type = type;
+		this._id = id;
 	}
 
 	config() {
 		return {
 			view: "window",
+			localId: "popup",
 			position: "center",
 			move: true,
 			close: true,
-			head: `${this.type} activity`,
+			head: {
+				template: "#title# activity",
+				localId: "title"
+			},
+			width: 450,
 			body: {
 				view: "form",
-				localId: "popup",
-				width: 500,
+				localId: "form",
 				elements: [
 					{
 						view: "textarea",
 						label: "Details",
 						name: "Details",
-						height: 150,
-						invalidMessage: "text"
+						invalidMessage: "Details in not be empty"
 					},
 					{
-						view: "combo",
+						view: "richselect",
 						label: "Type",
-						name: "ActivityType",
-						options: this.data,
-						invalidMessage: "text"
+						name: "TypeID",
+						options: {
+							view: "suggest",
+							body: {
+								view: "list",
+								data: activityTypes,
+								template: "#value#"
+							}
+						},
+						invalidMessage: "Type must not be empty"
 					},
 					{
-						view: "combo",
+						view: "richselect",
 						label: "Contact",
-						name: "Contact",
-						options: this.data,
-						invalidMessage: "text"},
+						name: "ContactID",
+						options: {
+							view: "suggest",
+							body: {
+								view: "list",
+								data: contacts,
+								template: "#value#"
+							}
+						},
+						invalidMessage: "Contact must not be empty"},
 					{
 						cols: [
 							{
 								view: "datepicker",
 								label: "Date",
 								name: "Date",
-								value: new Date(),
-								invalidMessage: "text"},
+								format: webix.i18n.longDateFormatStr
+							},
 							{
 								view: "datepicker",
 								label: "Time",
 								name: "Time",
-								value: new Date(),
 								type: "time",
-								timepicker: true,
-								invalidMessage: "text"}
+								format: webix.i18n.timeFormat,
+								timepicker: true
+							}
 						]
 					},
 					{
 						view: "checkbox",
 						labelRight: "Completed",
-						value: 1
+						name: "State",
+						checkValue: "Close",
+						uncheckValue: "Open"
 					},
 					{
 						cols: [
@@ -68,8 +90,16 @@ export default class PopupView extends JetView {
 							{
 								padding: 20,
 								cols: [
-									{view: "button", label: "Save"},
-									{view: "button", label: "Cancel"}
+									{
+										view: "button",
+										localId: "nameChangingBtn",
+										click: () => this._saveAction()
+									},
+									{
+										view: "button",
+										value: "Cancel",
+										click: () => this._hideWindow()
+									}
 								]
 							}
 						]
@@ -77,28 +107,79 @@ export default class PopupView extends JetView {
 				],
 				rules: {
 					Details: webix.rules.isNotEmpty,
-					ActivityType: webix.rules.isNotEmpty,
-					Contact: webix.rules.isNotEmpty,
-					Date: webix.rules.isNotEmpty,
-					Time: webix.rules.isNotEmpty
+					TypeID: webix.rules.isNotEmpty,
+					ContactID: webix.rules.isNotEmpty
 				}
 
 			}
 		};
 	}
 
-	init() {
-		this.on(this.app, "onDataEditStop", () => {
-			this.getRoot().getBody().clear();
-			this.getRoot().hide();
-		});
+	get _getForm() {
+		if (!this._form) {
+			this._form = this.$$("form");
+		}
+
+		return this._form;
 	}
 
-	showWindow() {
+	_setTime(date, time) {
+		const hours = time.getHours();
+		const minutes = time.getMinutes();
+		date.setHours(hours);
+		date.setMinutes(minutes);
+	}
+
+	_showWindow() {
+		const id = this._id;
+		const btnTitle = id ? "Edit" : "Add";
+		const button = id ? "Save" : "Add";
+
+		this.$$("title").setValues({title: btnTitle});
+		this.$$("nameChangingBtn").setValue(button);
+
+		if (id) {
+			const item = activities.getItem(id.row);
+			item.Time = item.DueDate;
+			this._getForm.setValues(item);
+		}
 		this.getRoot().show();
 	}
 
-	hideWindow() {
+	_hideWindow() {
+		this._getForm.clear();
+		this._getForm.clearValidation();
+		this.getRoot().hide();
+	}
+
+	_saveAction() {
+		if (!this._getForm.validate()) {
+			webix.message("Please check fields");
+			return false;
+		}
+
+		const formData = this._getForm.getValues();
+		let date = formData.DueDate;
+		const time = formData.Time;
+
+		if (date && time) {
+			this.setTimeIntoDate(date, time);
+		}
+		else if (time) {
+			const currentDate = new Date();
+			this.setTimeIntoDate(currentDate, time);
+		}
+
+		if (this._id) {
+			activities.updateItem(formData.id, formData);
+			webix.message("Updated successfully !");
+		}
+		else {
+			activities.add(formData, 0);
+			webix.message("Updated successfully !");
+		}
+		this._getForm.clear();
+		this._getForm.clearValidation();
 		this.getRoot().hide();
 	}
 }

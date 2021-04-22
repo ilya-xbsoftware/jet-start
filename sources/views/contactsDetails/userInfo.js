@@ -87,8 +87,8 @@ export default class DetailedInfo extends JetView {
                 </div>
                 <div class="info-end">
                     <div class="info__item">
-                      <i class="fas fa-envelope"></i>
-                      <span>${user.Birthday || empty}</span>
+                      <i class="far fa-calendar-alt"></i>
+                      <span>${user.birthday || empty}</span>
                     </div>
                     <div class="info__item">
                       <i class="fas fa-map-marker-alt"></i>
@@ -111,7 +111,6 @@ export default class DetailedInfo extends JetView {
 			const id = this.getParam("id");
 			const contact = contacts.getItem(id);
 			const status = statuses.getItem(contact.StatusID);
-			const userName = `${contact.FirstName} ${contact.LastName}`;
 			const userInfo = {
 				status: status.Value,
 				statusIcon: `fas fa-${status.Icon}`,
@@ -119,7 +118,7 @@ export default class DetailedInfo extends JetView {
 			};
 
 			this._getTemplate.parse(userInfo);
-			this._getLabel.setValue(userName);
+			this._getLabel.setValue(contact.value);
 		});
 	}
 

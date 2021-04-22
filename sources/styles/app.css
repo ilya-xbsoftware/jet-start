@@ -8,12 +8,12 @@
 
 .webix_list .webix_selected{
   box-shadow: inset 2px 0 #fe4f604d;
-  background-color: rgba(215, 239, 255, 0.294);
+  background-color: rgba(215, 239, 255, 0.192);
 }
 
 .webix_menu .webix_scroll_cont .webix_list_item.webix_selected{
   box-shadow: inset 3px 0 #fe4f60a1;
-  background-color: rgba(215, 239, 255, 0.294);
+  background-color: rgba(215, 239, 255, 0.192);
 }
 
 .webix_menu .webix_scroll_cont a span{
@@ -100,7 +100,12 @@
 }
 
 .detailed-info__row {
- border:none;
+  background-color: rgba(215, 239, 255, 0.192);
+  border:none;
+}
+
+.template{
+  background-color: rgba(215, 239, 255, 0.192);
 }
 
 .detailed-info__name .webix_el_box{
