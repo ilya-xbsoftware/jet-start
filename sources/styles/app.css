@@ -6,6 +6,16 @@
     opacity: 1;
 }
 
+.webix_list .webix_selected{
+  box-shadow: inset 2px 0 #fe4f604d;
+  background-color: rgba(215, 239, 255, 0.294);
+}
+
+.webix_menu .webix_list_item .menu .webix_selected{
+  box-shadow: inset 2px 0 #fe4f604d;
+  background-color: rgba(215, 239, 255, 0.294);
+}
+
 /*data loading status*/
 .status_good, .status_error, .status_saving{
 	text-align: center;
@@ -20,7 +30,7 @@
 
 /*login form*/
 .invalid_login .webix_header > div{
-    background: #FC3636;
+    background: #FE4F60;
     transition: background 1s;
 }
 .invalid_login{
@@ -55,4 +65,49 @@
 .app_menu .webix_icon{
 	font-size:20px;
 	vertical-align:middle;
+}
+
+/*App custom*/
+
+.toolbar{
+  padding-left: 200px;
+}
+
+.contact{
+  display: flex;
+  align-items: center;
+}
+
+.contact img{
+  width: 40px;
+  height: 42px;
+  border: 2px solid rgb(165, 182, 214);
+  padding: 1px;
+  border-radius: 50px;
+}
+
+.contact p{
+  margin-left: 20px;
+  line-height: 20px;
+}
+
+.detailedInfo__row {
+ border:none;
+}
+
+.detailedInfo__name .webix_el_box{
+  font-size: 25px;
+}
+
+.detailedInfo__button_delete .webix_img_btn{
+  border-radius: 10px;
+  background-color: rgba(129, 216, 250, 0.671);
+  color: rgb(92, 92, 92);
+  
+}
+
+.detailedInfo__button_edit .webix_img_btn{
+  border-radius: 10px;
+  background-color: rgba(129, 216, 250, 0.671);
+  color: rgb(92, 92, 92);
 }
