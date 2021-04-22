@@ -11,9 +11,17 @@
   background-color: rgba(215, 239, 255, 0.294);
 }
 
-.webix_menu .webix_list_item .menu .webix_selected{
-  box-shadow: inset 2px 0 #fe4f604d;
+.webix_menu .webix_scroll_cont .webix_list_item.webix_selected{
+  box-shadow: inset 3px 0 #fe4f60a1;
   background-color: rgba(215, 239, 255, 0.294);
+}
+
+.webix_menu .webix_scroll_cont a span{
+  margin-right: 15px;
+}
+
+.menu span{
+  margin-right: 5px;
 }
 
 /*data loading status*/
@@ -67,7 +75,7 @@
 	vertical-align:middle;
 }
 
-/*App custom*/
+/* app custome*/
 
 .toolbar{
   padding-left: 200px;
@@ -91,23 +99,86 @@
   line-height: 20px;
 }
 
-.detailedInfo__row {
+.detailed-info__row {
  border:none;
 }
 
-.detailedInfo__name .webix_el_box{
+.detailed-info__name .webix_el_box{
   font-size: 25px;
 }
 
-.detailedInfo__button_delete .webix_img_btn{
+.detailed-info__button_delete .webix_img_btn{
+  margin-right: 70px;
   border-radius: 10px;
-  background-color: rgba(129, 216, 250, 0.671);
+  background-color: rgba(255, 255, 255, 0);
   color: rgb(92, 92, 92);
-  
 }
 
-.detailedInfo__button_edit .webix_img_btn{
+.detailed-info__button_delete .webix_img_btn span{
+  margin-right: 5px;
+}
+
+.detailed-info__button_edit .webix_img_btn span{
+  margin-right: 10px;
+}
+
+.detailed-info__button_delete .webix_img_btn span::before{
+  color: #FE4F60;
+}
+
+.detailed-info__button_edit .webix_img_btn span::before{
+  color: rgb(246, 153, 77);
+}
+
+.detailed-info__button_edit .webix_el_box button{
   border-radius: 10px;
-  background-color: rgba(129, 216, 250, 0.671);
+  background-color: rgba(255, 255, 255, 0);
   color: rgb(92, 92, 92);
 }
+
+.user-template{
+  display: flex;
+  padding-left: 10px;
+}
+
+.user-template .info-start{
+  margin-left: 80px;
+}
+
+.user-template i{
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.user-template span{
+  font-size: 17px;
+}
+
+.user-template .info-end{
+  margin-left: 80px;
+}
+
+.status .status__id{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 17px;
+}
+
+.status .status__id i{
+  color: rgb(246, 153, 77);
+ }
+
+.info__item{
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+ }
+
+ .info__item i{
+  color:  rgb(165, 182, 214)
+ }
+
+ .template{
+   border-top: none;
+ }

@@ -9,82 +9,90 @@ export default class DetailedInfo extends JetView {
 		return {
 			rows: [
 				{
-					css: "detailedInfo",
+					css: "detailed-info",
 					rows: [
 						{
-							css: "detailedInfo__row",
+							css: "detailed-info__row",
 							padding: {
 								top: 30,
-								left: 30,
+								left: 50,
 								right: 30
 							},
 							cols: [
 								{
 									view: "label",
+									label: "N/A",
 									localId: "userLabel",
-									label: "Loading",
-									css: "detailedInfo__name"
+									css: "detailed-info__name"
 								},
 								{},
 								{
-									view: "button",
-									icon: "fas fa-trash-alt",
-									type: "icon",
-									label: "Delete",
-									autowidth: true,
-									css: "detailedInfo__button_delete"
-								},
-								{
-									view: "button",
-									icon: "fas fa-edit",
-									type: "icon",
-									label: "Edit",
-									autowidth: true,
-									css: "detailedInfo__button_edit"
+									padding: 15,
+									cols: [
+										{
+											view: "button",
+											icon: "fas fa-trash-alt",
+											type: "icon",
+											label: "Delete",
+											autowidth: true,
+											css: "detailed-info__button_delete webix_transparent"
+										},
+										{
+											view: "button",
+											icon: "fas fa-edit",
+											type: "icon",
+											label: "Edit",
+											autowidth: true,
+											css: "detailed-info__button_edit webix_transparent"
+										}
+									]
 								}
+
 							]
 						}
 					]
 				},
 				{
 					localId: "description",
+					css: "template",
 					template(user) {
 						const image = user.Photo || LOCAL_PHOTO_URL;
+						const empty = "N/A";
 						return `
              <section class="user-template">
                 <div class="status">
-                    <img class ="status__img" src=${image || "Loading"} alt="User Photo">
+                    <img class ="status__img" src=${image || empty} alt="User Photo">
                     <div class ="status__id">
-                      <i class="${user.statusIcon || "Loading"}"></i>
-                      <p>${user.status || "Loading"}</p>
+                      <i class="${user.statusIcon || empty}"></i>
+                      <span>${user.status || empty}</span>
                     </div>
                 </div>
                 <div class="info-start">
                     <div class="info__item">
                       <i class="fas fa-envelope"></i>
-                      <p>${user.Email || "empty"}</p>
+                      <span>${user.Email || empty}</span>
                     </div>
                     <div class="info__item">
-                      <i class="fas fa-skype"></i>
-                      <p>${user.Skype || "empty"}</p>
+                      <i class="fab fa-skype"></i>
+                      <span>${user.Skype || empty}</span>
                     </div>
                     <div class="info__item">
-                      <i class="fas fa-pray"></i>
-                      <p>${user.Job || "empty"}</p>
+                      <i class="fas fa-crown"></i>
+                      <span>${user.Job || empty}</span>
                     </div>
                     <div class="info__item">
                       <i class="fas fa-briefcase"></i>
-                      <p>${user.Company || "empty"}</p>
+                      <span>${user.Company || empty}</span>
                     </div>
                 </div>
                 <div class="info-end">
                     <div class="info__item">
                       <i class="fas fa-envelope"></i>
-                      <p>${user.Birthday || "empty"}</p>
+                      <span>${user.Birthday || empty}</span>
                     </div>
                     <div class="info__item">
-                      <i class="fas fa-pray"></i>
-                      <p>${user.Address || "empty"}</p>
+                      <i class="fas fa-map-marker-alt"></i>
+                      <span>${user.Address || empty}</span>
                     </div>
                 </div>
              </section>
@@ -95,11 +103,6 @@ export default class DetailedInfo extends JetView {
 		};
 	}
 
-	init() {
-		this.template = this.$$("description");
-		this.templateLabel = this.$$("userLabel");
-	}
-
 	urlChange() {
 		webix.promise.all([
 			contacts.waitData,
@@ -108,16 +111,32 @@ export default class DetailedInfo extends JetView {
 			const id = this.getParam("id");
 			const contact = contacts.getItem(id);
 			const status = statuses.getItem(contact.StatusID);
-			const userName = `${contact.FirstName} ${contact.LastName}` || "Loading";
+			const userName = `${contact.FirstName} ${contact.LastName}`;
 			const userInfo = {
 				status: status.Value,
 				statusIcon: `fas fa-${status.Icon}`,
 				...webix.copy(contact)
 			};
 
-			this.template.parse(userInfo);
-			this.templateLabel.setValue(userName);
+			this._getTemplate.parse(userInfo);
+			this._getLabel.setValue(userName);
 		});
+	}
+
+	get _getTemplate() {
+		if (!this._template) {
+			this._template = this.$$("description");
+		}
+
+		return this._template;
+	}
+
+	get _getLabel() {
+		if (!this._label) {
+			this._label = this.$$("userLabel");
+		}
+
+		return this._label;
 	}
 }
 
