@@ -20,7 +20,7 @@ export default class Activities extends JetView {
 							align: "right",
 							width: 120,
 							click: () => {
-								this.ui(new PopupView(this.app, ""))._showWindow();
+								this._popupActionNew.showWindow();
 							}
 						}
 					]},
@@ -30,6 +30,11 @@ export default class Activities extends JetView {
 					scrollX: false,
 					scroll: "auto",
 					select: true,
+					on: {
+						onAfterSelect: (id) => {
+							this.show(`../activities?id=${id}`);
+						}
+					},
 					columns: [
 						{
 							id: "State",
@@ -82,8 +87,8 @@ export default class Activities extends JetView {
 						}
 					],
 					onClick: {
-						"delete-row": (object, id) => this._deleteRow(id),
-						"edit-row": (object, id) => this._editRow(id)
+						"delete-row": (object, id) => this._deleteActivity(id.row),
+						"edit-row": (object, id) => this._popupActionUpdate.showWindow(id.row)
 					}
 				}
 			]
@@ -92,25 +97,35 @@ export default class Activities extends JetView {
 
 	init() {
 		this._dataTable = this.$$("datatable");
+		this._popupActionUpdate = this.ui(new PopupView(this.app, "", this._urlId));
+		this._popupActionNew = this.ui(new PopupView(this.app, ""));
+
 		activities.waitData.then(() => {
 			this._dataTable.sync(activities);
 		});
+	}
 
-		this.on(this._dataTable, "onAfterSelect", (id) => {
-			this.show(`../activities?id=${id}`);
+	urlChange() {
+		this._urlId = this.getParam("id");
+		activities.waitData.then(() => {
+			const id = this.getParam("id") || activities.getFirstId();
+
+			if (id && activities.exists(id)) {
+				this._dataTable.select(id);
+			}
+			else {
+				this.show("../activities");
+			}
 		});
 	}
 
-	_deleteRow(id) {
+
+	_deleteActivity(id) {
 		if (id) {
 			webix.confirm("Are you sure?")
 				.then(() => {
 					activities.remove(id);
 				});
 		}
-	}
-
-	_editRow(id) {
-		this.ui(new PopupView(this.app, "", id))._showWindow(id);
 	}
 }

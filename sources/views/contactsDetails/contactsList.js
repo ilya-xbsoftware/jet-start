@@ -1,6 +1,6 @@
 import {JetView} from "webix-jet";
 
-import LOCAL_PHOTO_URL from "../../constants/urls";
+import PLACEHOLDER_AVATAR_URL from "../../constants/urls";
 import contacts from "../../models/contacts";
 
 export default class ContactsList extends JetView {
@@ -12,6 +12,11 @@ export default class ContactsList extends JetView {
 			type: {height: 70},
 			select: true,
 			scroll: "auto",
+			on: {
+				onAfterSelect: (id) => {
+					this.show(`../contacts?id=${id}`);
+				}
+			},
 			template: userInfo => this._getUserTemplate(userInfo)
 		};
 	}
@@ -20,10 +25,6 @@ export default class ContactsList extends JetView {
 		this.list = this.$$("contactsList");
 		contacts.waitData.then(() => {
 			this.list.parse(contacts);
-		});
-
-		this.on(this.list, "onAfterSelect", (id) => {
-			this.show(`../contacts?id=${id}`);
 		});
 	}
 
@@ -41,7 +42,7 @@ export default class ContactsList extends JetView {
 	}
 
 	_getUserTemplate(userData) {
-		const image = userData.Photo || LOCAL_PHOTO_URL;
+		const image = userData.Photo || PLACEHOLDER_AVATAR_URL;
 
 		return `<div class='contact'> 
               <img src='${image}' alt='user photo' class='contact__img'>

@@ -1,6 +1,6 @@
 import {JetView} from "webix-jet";
 
-import LOCAL_PHOTO_URL from "../../constants/urls";
+import PLACEHOLDER_AVATAR_URL from "../../constants/urls";
 import contacts from "../../models/contacts";
 import statuses from "../../models/statuses";
 
@@ -56,13 +56,13 @@ export default class DetailedInfo extends JetView {
 					localId: "description",
 					css: "template",
 					template(user) {
-						const image = user.Photo || LOCAL_PHOTO_URL;
+						const image = user.Photo || PLACEHOLDER_AVATAR_URL;
 						const empty = "N/A";
 						return `
              <section class="user-template">
                 <div class="status">
-                    <img class ="status__img" src=${image || empty} alt="User Photo">
-                    <div class ="status__id">
+                    <img class ="user__img" src=${image || empty} alt="User Photo">
+                    <div class ="user__id">
                       <i class="${user.statusIcon || empty}"></i>
                       <span>${user.status || empty}</span>
                     </div>

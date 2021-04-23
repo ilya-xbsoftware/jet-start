@@ -163,14 +163,14 @@
   margin-left: 80px;
 }
 
-.status .status__id{
+.status .user__id{
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 17px;
 }
 
-.status .status__id i{
+.status .user__id i{
   color: rgb(246, 153, 77);
  }
 

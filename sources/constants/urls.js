@@ -1,3 +1,3 @@
-const LOCAL_PHOTO_URL = "./sources/images/man.png";
+const PLACEHOLDER_AVATAR_URL = "./sources/images/man.png";
 
-export default LOCAL_PHOTO_URL;
+export default PLACEHOLDER_AVATAR_URL;

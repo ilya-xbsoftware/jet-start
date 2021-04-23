@@ -8,10 +8,6 @@ const activities = new webix.DataCollection({
 			item.DueDate = webix.i18n.parseFormatDate(item.DueDate);
 		},
 
-		$change: (item) => {
-			item.DueDate = webix.i18n.parseFormatDate(item.DueDate);
-		},
-
 		$save: (item) => {
 			item.DueDate = dueDateDataFormat(item.DueDate);
 		}
