@@ -16,7 +16,7 @@ export default class PopupView extends JetView {
 			localId: "popup",
 			position: "center",
 			move: true,
-			close: true,
+			modal: true,
 			head: {
 				template: "#title# activity",
 				localId: "title"
