@@ -34,8 +34,6 @@ export default class Activities extends JetView {
 						{
 							id: "State",
 							header: "",
-							checkValue: "on",
-							uncheckValue: "off",
 							template: "{common.checkbox()}",
 							width: 50
 						},
@@ -104,13 +102,15 @@ export default class Activities extends JetView {
 	}
 
 	_deleteRow(id) {
-		webix.confirm("Are you sure?")
-			.then(() => {
-				activities.remove(id);
-			});
+		if (id) {
+			webix.confirm("Are you sure?")
+				.then(() => {
+					activities.remove(id);
+				});
+		}
 	}
 
 	_editRow(id) {
-		this.ui(new PopupView(this.app, "", id))._showWindow();
+		this.ui(new PopupView(this.app, "", id))._showWindow(id);
 	}
 }

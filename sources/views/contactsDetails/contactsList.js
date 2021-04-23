@@ -46,7 +46,7 @@ export default class ContactsList extends JetView {
 		return `<div class='contact'> 
               <img src='${image}' alt='user photo' class='contact__img'>
               <div class='contact__info'>
-                <p><strong> ${userData.fullName}</strong><br>${userData.Company}</p>
+                <p><strong> ${userData.value}</strong><br>${userData.Company}</p>
               </div>
             </div>`;
 	}

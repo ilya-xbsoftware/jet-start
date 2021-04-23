@@ -21,7 +21,7 @@ export default class PopupView extends JetView {
 				template: "#title# activity",
 				localId: "title"
 			},
-			width: 450,
+			width: 600,
 			body: {
 				view: "form",
 				localId: "form",
@@ -64,7 +64,7 @@ export default class PopupView extends JetView {
 							{
 								view: "datepicker",
 								label: "Date",
-								name: "Date",
+								name: "DueDate",
 								format: webix.i18n.longDateFormatStr
 							},
 							{
@@ -80,9 +80,7 @@ export default class PopupView extends JetView {
 					{
 						view: "checkbox",
 						labelRight: "Completed",
-						name: "State",
-						checkValue: "Close",
-						uncheckValue: "Open"
+						name: "State"
 					},
 					{
 						cols: [
@@ -93,7 +91,7 @@ export default class PopupView extends JetView {
 									{
 										view: "button",
 										localId: "nameChangingBtn",
-										click: () => this._saveAction()
+										click: () => this._saveAction(this._id)
 									},
 									{
 										view: "button",
@@ -110,7 +108,6 @@ export default class PopupView extends JetView {
 					TypeID: webix.rules.isNotEmpty,
 					ContactID: webix.rules.isNotEmpty
 				}
-
 			}
 		};
 	}
@@ -130,8 +127,7 @@ export default class PopupView extends JetView {
 		date.setMinutes(minutes);
 	}
 
-	_showWindow() {
-		const id = this._id;
+	_showWindow(id) {
 		const btnTitle = id ? "Edit" : "Add";
 		const button = id ? "Save" : "Add";
 
@@ -140,8 +136,12 @@ export default class PopupView extends JetView {
 
 		if (id) {
 			const item = activities.getItem(id.row);
-			item.Time = item.DueDate;
-			this._getForm.setValues(item);
+			const newItem = {
+				Time: item.DueDate,
+				...this.webix.copy(item)
+			};
+
+			this._getForm.setValues(newItem);
 		}
 		this.getRoot().show();
 	}
@@ -152,34 +152,36 @@ export default class PopupView extends JetView {
 		this.getRoot().hide();
 	}
 
-	_saveAction() {
+	_saveAction(id) {
 		if (!this._getForm.validate()) {
-			webix.message("Please check fields");
-			return false;
-		}
-
-		const formData = this._getForm.getValues();
-		let date = formData.DueDate;
-		const time = formData.Time;
-
-		if (date && time) {
-			this.setTimeIntoDate(date, time);
-		}
-		else if (time) {
-			const currentDate = new Date();
-			this.setTimeIntoDate(currentDate, time);
-		}
-
-		if (this._id) {
-			activities.updateItem(formData.id, formData);
-			webix.message("Updated successfully !");
+			webix.message({text: "Please check fields", type: "error"});
 		}
 		else {
-			activities.add(formData, 0);
-			webix.message("Updated successfully !");
+			const formData = this._getForm.getValues();
+			const date = formData.DueDate;
+			const time = formData.Time;
+
+			if (date && time) {
+				this._setTime(date, time);
+			}
+			else if (time) {
+				const currentDate = new Date();
+				this._setTime(currentDate, time);
+			}
+
+			activities.waitSave(() => {
+				if (id) {
+					activities.updateItem(formData.id, formData);
+				}
+				else {
+					activities.parse(formData);
+				}
+			}).then(() => {
+				this._getForm.clear();
+				this._getForm.clearValidation();
+				webix.message({text: "Updated successfully !", type: "success"});
+				this.getRoot().hide();
+			});
 		}
-		this._getForm.clear();
-		this._getForm.clearValidation();
-		this.getRoot().hide();
 	}
 }
