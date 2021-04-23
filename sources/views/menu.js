@@ -1,6 +1,6 @@
 import {JetView, plugins} from "webix-jet";
 
-import METHOD_NAME from "../constants/gloabalUrlChanger";
+import events from "../constants/events";
 
 export default class Menu extends JetView {
 	config() {
@@ -18,7 +18,7 @@ export default class Menu extends JetView {
 			on: {
 				onAfterSelect(id) {
 					const menuItem = this.getItem(id);
-					this.$scope.app.callEvent(`${METHOD_NAME}`, [menuItem.value]);
+					this.$scope.app.callEvent(events.HEADER_PAGE_TITLE_CHANGE, [menuItem.value]);
 				}
 			}
 		};

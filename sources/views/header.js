@@ -1,6 +1,6 @@
 import {JetView} from "webix-jet";
 
-import METHOD_NAME from "../constants/gloabalUrlChanger";
+import events from "../constants/events";
 
 export default class Header extends JetView {
 	config() {
@@ -20,13 +20,8 @@ export default class Header extends JetView {
 
 	init() {
 		this.headerTitle = this.$$("header-title");
-		this.on(this.app, `${METHOD_NAME}`, (title) => {
-			const titleWithСapitalLetter = this._capitalizeFirstLetter(title);
-			this.headerTitle.setValue(titleWithСapitalLetter);
+		this.on(this.app, events.HEADER_PAGE_TITLE_CHANGE, (title) => {
+			this.headerTitle.setValue(title);
 		});
-	}
-
-	_capitalizeFirstLetter(string) {
-		return string[0].toUpperCase() + string.slice(1);
 	}
 }
