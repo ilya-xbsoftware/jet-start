@@ -29,8 +29,7 @@ export default class PopupView extends JetView {
 					{
 						view: "textarea",
 						label: "Details",
-						name: "Details",
-						invalidMessage: "Details in not be empty"
+						name: "Details"
 					},
 					{
 						view: "richselect",
@@ -104,7 +103,6 @@ export default class PopupView extends JetView {
 					}
 				],
 				rules: {
-					Details: webix.rules.isNotEmpty,
 					TypeID: webix.rules.isNotEmpty,
 					ContactID: webix.rules.isNotEmpty
 				}
@@ -174,7 +172,7 @@ export default class PopupView extends JetView {
 					activities.updateItem(formData.id, formData);
 				}
 				else {
-					activities.parse(formData);
+					activities.add(formData, 0);
 				}
 			}).then(() => {
 				this._getForm.clear();
