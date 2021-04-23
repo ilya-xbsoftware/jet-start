@@ -20,7 +20,7 @@ export default class Activities extends JetView {
 							align: "right",
 							width: 120,
 							click: () => {
-								this._popupActionNew.showWindow();
+								this.ui(new PopupView(this.app, "")).showWindow();
 							}
 						}
 					]},
@@ -87,8 +87,11 @@ export default class Activities extends JetView {
 						}
 					],
 					onClick: {
-						"delete-row": (object, id) => this._deleteActivity(id.row),
-						"edit-row": (object, id) => this._popupActionUpdate.showWindow(id.row)
+						"delete-row": (event, id) => this._deleteActivity(id.row),
+						"edit-row": (event, id) => {
+							const editingItem = this._dataTable.getItem(id.row);
+							this.ui(new PopupView(this.app, "", editingItem)).showWindow();
+						}
 					}
 				}
 			]
@@ -97,9 +100,6 @@ export default class Activities extends JetView {
 
 	init() {
 		this._dataTable = this.$$("datatable");
-		this._popupActionUpdate = this.ui(new PopupView(this.app, "", this._urlId));
-		this._popupActionNew = this.ui(new PopupView(this.app, ""));
-
 		activities.waitData.then(() => {
 			this._dataTable.sync(activities);
 		});
@@ -118,7 +118,6 @@ export default class Activities extends JetView {
 			}
 		});
 	}
-
 
 	_deleteActivity(id) {
 		if (id) {

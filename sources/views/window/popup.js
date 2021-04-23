@@ -5,9 +5,9 @@ import activityTypes from "../../models/activityTypes";
 import contacts from "../../models/contacts";
 
 export default class PopupView extends JetView {
-	constructor(app, name, id) {
+	constructor(app, name, editingItem) {
 		super(app, name);
-		this._id = id;
+		this._editingItem = editingItem;
 	}
 
 	config() {
@@ -90,7 +90,7 @@ export default class PopupView extends JetView {
 									{
 										view: "button",
 										localId: "nameChangingBtn",
-										click: () => this._saveAction(this._id)
+										click: () => this._saveAction()
 									},
 									{
 										view: "button",
@@ -110,6 +110,23 @@ export default class PopupView extends JetView {
 		};
 	}
 
+	init() {
+		const popupTitle = this._editingItem ? "Edit" : "Add";
+		const button = this._editingItem ? "Save" : "Add";
+
+		this.$$("nameChangingBtn").setValue(button);
+		this.$$("title").setValues({title: popupTitle});
+
+		if (this._editingItem) {
+			const newItem = {
+				Time: this._editingItem.DueDate,
+				...this.webix.copy(this._editingItem)
+			};
+
+			this._getForm.setValues(newItem);
+		}
+	}
+
 	get _getForm() {
 		if (!this._form) {
 			this._form = this.$$("form");
@@ -118,7 +135,7 @@ export default class PopupView extends JetView {
 		return this._form;
 	}
 
-	_setTime(date, time) {
+	_setTimeToDate(date, time) {
 		const hours = time.getHours();
 		const minutes = time.getMinutes();
 		date.setHours(hours);
@@ -126,12 +143,10 @@ export default class PopupView extends JetView {
 	}
 
 	_hideWindow() {
-		this._getForm.clear();
-		this._getForm.clearValidation();
-		this.getRoot().hide();
+		this.getRoot().close();
 	}
 
-	_saveAction(id) {
+	_saveAction() {
 		if (!this._getForm.validate()) {
 			webix.message({text: "Please check fields", type: "error"});
 		}
@@ -141,19 +156,19 @@ export default class PopupView extends JetView {
 			const time = formData.Time;
 
 			if (date && time) {
-				this._setTime(date, time);
+				this._setTimeToDate(date, time);
 			}
 			else if (time) {
 				const currentDate = new Date();
-				this._setTime(currentDate, time);
+				this._setTimeToDate(currentDate, time);
 			}
 
 			activities.waitSave(() => {
-				if (id) {
-					activities.updateItem(formData.id, formData);
+				if (this._editingItem) {
+					activities.updateItem(this._editingItem.id, formData);
 				}
 				else {
-					activities.add(formData, 0);
+					activities.add(formData);
 				}
 			}).then(() => {
 				webix.message({text: "Updated successfully !", type: "success"});
@@ -162,23 +177,7 @@ export default class PopupView extends JetView {
 		}
 	}
 
-	showWindow(id) {
-		this._id = id;
-		const btnTitle = id ? "Edit" : "Add";
-		const button = id ? "Save" : "Add";
-
-		this.$$("title").setValues({title: btnTitle});
-		this.$$("nameChangingBtn").setValue(button);
-
-		if (id) {
-			const item = activities.getItem(id);
-			const newItem = {
-				Time: item.DueDate,
-				...this.webix.copy(item)
-			};
-
-			this._getForm.setValues(newItem);
-		}
+	showWindow() {
 		this.getRoot().show();
 	}
 }

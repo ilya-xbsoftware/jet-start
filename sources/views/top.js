@@ -1,13 +1,13 @@
 import {JetView} from "webix-jet";
 
+import Header from "./header";
 import Menu from "./menu";
-import Toolbar from "./toolbar";
 
 export default class TopView extends JetView {
 	config() {
 		return {
 			rows: [
-				Toolbar,
+				Header,
 				{cols: [Menu, {$subview: true}]}
 			]
 		};
