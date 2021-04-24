@@ -20,7 +20,7 @@ export default class Activities extends JetView {
 							align: "right",
 							width: 120,
 							click: () => {
-								this.ui(new PopupView(this.app, "")).showWindow();
+								this.popup.showWindow();
 							}
 						}
 					]},
@@ -52,7 +52,17 @@ export default class Activities extends JetView {
 						},
 						{
 							id: "DueDate",
-							header: ["Due date", {content: "datepickerFilter"}],
+							header: ["Due date", {
+								content: "datepickerFilter",
+								compare(value, filter) {
+									if (webix.isDate(value)) {
+										const date = webix.Date.copy(value);
+										date.setHours(0, 0, 0);
+										return filter * 1 === date * 1;
+									}
+									return false;
+								}
+							}],
 							format: webix.i18n.longDateFormatStr,
 							sort: "date",
 							fillspace: 1,
@@ -90,7 +100,7 @@ export default class Activities extends JetView {
 						"delete-row": (event, id) => this._deleteActivity(id.row),
 						"edit-row": (event, id) => {
 							const editingItem = this._dataTable.getItem(id.row);
-							this.ui(new PopupView(this.app, "", editingItem)).showWindow();
+							this.popup.showWindow(editingItem);
 						}
 					}
 				}
@@ -100,9 +110,8 @@ export default class Activities extends JetView {
 
 	init() {
 		this._dataTable = this.$$("datatable");
-		activities.waitData.then(() => {
-			this._dataTable.sync(activities);
-		});
+		this._dataTable.sync(activities);
+		this.popup = this.ui(PopupView);
 	}
 
 	urlChange() {

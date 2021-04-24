@@ -5,11 +5,6 @@ import activityTypes from "../../models/activityTypes";
 import contacts from "../../models/contacts";
 
 export default class PopupView extends JetView {
-	constructor(app, name, editingItem) {
-		super(app, name);
-		this._editingItem = editingItem;
-	}
-
 	config() {
 		return {
 			view: "window",
@@ -95,7 +90,7 @@ export default class PopupView extends JetView {
 									{
 										view: "button",
 										value: "Cancel",
-										click: () => this._hideWindow()
+										click: () => this.hideWindow()
 									}
 								]
 							}
@@ -110,23 +105,6 @@ export default class PopupView extends JetView {
 		};
 	}
 
-	init() {
-		const popupTitle = this._editingItem ? "Edit" : "Add";
-		const button = this._editingItem ? "Save" : "Add";
-
-		this.$$("nameChangingBtn").setValue(button);
-		this.$$("title").setValues({title: popupTitle});
-
-		if (this._editingItem) {
-			const newItem = {
-				Time: this._editingItem.DueDate,
-				...this.webix.copy(this._editingItem)
-			};
-
-			this._getForm.setValues(newItem);
-		}
-	}
-
 	get _getForm() {
 		if (!this._form) {
 			this._form = this.$$("form");
@@ -138,12 +116,9 @@ export default class PopupView extends JetView {
 	_setTimeToDate(date, time) {
 		const hours = time.getHours();
 		const minutes = time.getMinutes();
+
 		date.setHours(hours);
 		date.setMinutes(minutes);
-	}
-
-	_hideWindow() {
-		this.getRoot().close();
 	}
 
 	_saveAction() {
@@ -155,6 +130,7 @@ export default class PopupView extends JetView {
 			const date = formData.DueDate;
 			const time = formData.Time;
 
+
 			if (date && time) {
 				this._setTimeToDate(date, time);
 			}
@@ -164,20 +140,40 @@ export default class PopupView extends JetView {
 			}
 
 			activities.waitSave(() => {
-				if (this._editingItem) {
-					activities.updateItem(this._editingItem.id, formData);
+				if (this._editingItemId) {
+					activities.updateItem(this._editingItemId, formData);
 				}
 				else {
 					activities.add(formData);
 				}
 			}).then(() => {
 				webix.message({text: "Updated successfully !", type: "success"});
-				this._hideWindow();
+				this.hideWindow();
 			});
 		}
 	}
 
-	showWindow() {
+	showWindow(editingItem) {
+		const popupTitle = editingItem ? "Edit" : "Add";
+		const button = editingItem ? "Save" : "Add";
+
+		this.$$("nameChangingBtn").setValue(button);
+		this.$$("title").setValues({title: popupTitle});
+
+		if (editingItem) {
+			this._editingItemId = editingItem.id;
+			const newItem = {
+				Time: editingItem.DueDate,
+				...this.webix.copy(editingItem)
+			};
+			this._getForm.setValues(newItem);
+		}
 		this.getRoot().show();
+	}
+
+	hideWindow() {
+		this._getForm.clear();
+		this._getForm.clearValidation();
+		this.getRoot().hide();
 	}
 }

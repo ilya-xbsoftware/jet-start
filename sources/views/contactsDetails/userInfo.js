@@ -58,45 +58,43 @@ export default class DetailedInfo extends JetView {
 					template(user) {
 						const image = user.Photo || PLACEHOLDER_AVATAR_URL;
 						const empty = "N/A";
-						return `
-             <section class="user-template">
-                <div class="status">
-                    <img class ="user__img" src=${image || empty} alt="User Photo">
-                    <div class ="user__id">
-                      <i class="${user.statusIcon || empty}"></i>
-                      <span>${user.status || empty}</span>
-                    </div>
-                </div>
-                <div class="info-start">
-                    <div class="info__item">
-                      <i class="fas fa-envelope"></i>
-                      <span>${user.Email || empty}</span>
-                    </div>
-                    <div class="info__item">
-                      <i class="fab fa-skype"></i>
-                      <span>${user.Skype || empty}</span>
-                    </div>
-                    <div class="info__item">
-                      <i class="fas fa-crown"></i>
-                      <span>${user.Job || empty}</span>
-                    </div>
-                    <div class="info__item">
-                      <i class="fas fa-briefcase"></i>
-                      <span>${user.Company || empty}</span>
-                    </div>
-                </div>
-                <div class="info-end">
-                    <div class="info__item">
-                      <i class="far fa-calendar-alt"></i>
-                      <span>${user.birthday || empty}</span>
-                    </div>
-                    <div class="info__item">
-                      <i class="fas fa-map-marker-alt"></i>
-                      <span>${user.Address || empty}</span>
-                    </div>
-                </div>
-             </section>
-            `;
+						return `<section class="user-template">
+                      <div class="status">
+                        <img class ="user__img" src=${image || empty} alt="User Photo">
+                        <div class ="user__id">
+                          <i class="${user.statusIcon || empty}"></i>
+                          <span>${user.status || empty}</span>
+                        </div>
+                      </div>
+                      <div class="info-start">
+                        <div class="info__item">
+                        <i class="fas fa-envelope"></i>
+                        <span>${user.Email || empty}</span>
+                      </div>
+                      <div class="info__item">
+                        <i class="fab fa-skype"></i>
+                        <span>${user.Skype || empty}</span>
+                      </div>
+                      <div class="info__item">
+                        <i class="fas fa-crown"></i>
+                        <span>${user.Job || empty}</span>
+                      </div>
+                      <div class="info__item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>${user.Company || empty}</span>
+                      </div>
+                      </div>
+                      <div class="info-end">
+                          <div class="info__item">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>${user.birthday || empty}</span>
+                          </div>
+                          <div class="info__item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${user.Address || empty}</span>
+                          </div>
+                      </div>
+                    </section>`;
 					}
 				}
 			]
