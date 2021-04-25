@@ -6,6 +6,24 @@
     opacity: 1;
 }
 
+.webix_list .webix_selected{
+  box-shadow: inset 2px 0 #fe4f604d;
+  background-color: rgba(215, 239, 255, 0.192);
+}
+
+.webix_menu .webix_scroll_cont .webix_list_item.webix_selected{
+  box-shadow: inset 3px 0 #fe4f60a1;
+  background-color: rgba(215, 239, 255, 0.192);
+}
+
+.webix_menu .webix_scroll_cont a span{
+  margin-right: 15px;
+}
+
+.menu span{
+  margin-right: 5px;
+}
+
 /*data loading status*/
 .status_good, .status_error, .status_saving{
 	text-align: center;
@@ -20,7 +38,7 @@
 
 /*login form*/
 .invalid_login .webix_header > div{
-    background: #FC3636;
+    background: #FE4F60;
     transition: background 1s;
 }
 .invalid_login{
@@ -56,3 +74,116 @@
 	font-size:20px;
 	vertical-align:middle;
 }
+
+/* app custome*/
+
+.toolbar{
+  padding-left: 200px;
+}
+
+.contact{
+  display: flex;
+  align-items: center;
+}
+
+.contact img{
+  width: 40px;
+  height: 42px;
+  border: 2px solid rgb(165, 182, 214);
+  padding: 1px;
+  border-radius: 50px;
+}
+
+.contact p{
+  margin-left: 20px;
+  line-height: 20px;
+}
+
+.detailed-info__row {
+  background-color: rgba(215, 239, 255, 0.192);
+  border:none;
+}
+
+.template{
+  background-color: rgba(215, 239, 255, 0.192);
+}
+
+.detailed-info__name .webix_el_box{
+  font-size: 25px;
+}
+
+.detailed-info__button_delete .webix_img_btn{
+  margin-right: 70px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0);
+  color: rgb(92, 92, 92);
+}
+
+.detailed-info__button_delete .webix_img_btn span{
+  margin-right: 5px;
+}
+
+.detailed-info__button_edit .webix_img_btn span{
+  margin-right: 10px;
+}
+
+.detailed-info__button_delete .webix_img_btn span::before{
+  color: #FE4F60;
+}
+
+.detailed-info__button_edit .webix_img_btn span::before{
+  color: rgb(246, 153, 77);
+}
+
+.detailed-info__button_edit .webix_el_box button{
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0);
+  color: rgb(92, 92, 92);
+}
+
+.user-template{
+  display: flex;
+  padding-left: 10px;
+}
+
+.user-template .info-start{
+  margin-left: 80px;
+}
+
+.user-template i{
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.user-template span{
+  font-size: 17px;
+}
+
+.user-template .info-end{
+  margin-left: 80px;
+}
+
+.status .user__id{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 17px;
+}
+
+.status .user__id i{
+  color: rgb(246, 153, 77);
+ }
+
+.info__item{
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+ }
+
+ .info__item i{
+  color:  rgb(165, 182, 214)
+ }
+
+ .template{
+   border-top: none;
+ }
