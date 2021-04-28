@@ -1,8 +1,14 @@
 import {JetView} from "webix-jet";
 
-import PLACEHOLDER_AVATAR_URL from "../../constants/urls";
-import contacts from "../../models/contacts";
-import statuses from "../../models/statuses";
+import events from "../constants/events";
+import PLACEHOLDER_AVATAR_URL from "../constants/urls";
+import activities from "../models/activities";
+import contacts from "../models/contacts";
+import files from "../models/files";
+import statuses from "../models/statuses";
+import ContactTable from "./contacts-elements/contactTable";
+import ContactsFileController from "./contacts-elements/contactsFileController";
+
 
 export default class DetailedInfo extends JetView {
 	config() {
@@ -32,10 +38,12 @@ export default class DetailedInfo extends JetView {
 										{
 											view: "button",
 											icon: "fas fa-trash-alt",
+											localId: "deleteContact",
 											type: "icon",
 											label: "Delete",
 											autowidth: true,
-											css: "detailed-info__button_delete webix_transparent"
+											css: "detailed-info__button_delete webix_transparent",
+											click: () => this._deleteContactConfirm()
 										},
 										{
 											view: "button",
@@ -43,7 +51,8 @@ export default class DetailedInfo extends JetView {
 											type: "icon",
 											label: "Edit",
 											autowidth: true,
-											css: "detailed-info__button_edit webix_transparent"
+											css: "detailed-info__button_edit webix_transparent",
+											click: () => this.show("./contact-form?action=edit")
 										}
 									]
 								}
@@ -54,6 +63,7 @@ export default class DetailedInfo extends JetView {
 				},
 				{
 					localId: "description",
+					minHeight: 250,
 					css: "template",
 					template(user) {
 						const image = user.Photo || PLACEHOLDER_AVATAR_URL;
@@ -96,6 +106,41 @@ export default class DetailedInfo extends JetView {
                       </div>
                     </section>`;
 					}
+				},
+				{
+					view: "tabview",
+					loacalId: "tabbar",
+					cells: [
+						{
+							header: "Activities",
+							body: {
+								rows: [
+									ContactTable,
+									{
+										cols: [
+											{},
+											{
+												view: "button",
+												label: "+ Add activity",
+												type: "icon",
+												align: "right",
+												width: 200,
+												click: () => {
+													this.app.callEvent(events.SHOW_POPUP);
+												}
+											}
+										]
+									}
+								]
+
+							}
+
+						},
+						{
+							header: "Files",
+							body: ContactsFileController
+						}
+					]
 				}
 			]
 		};
@@ -106,18 +151,47 @@ export default class DetailedInfo extends JetView {
 			contacts.waitData,
 			statuses.waitData
 		]).then(() => {
-			const id = this.getParam("id");
-			const contact = contacts.getItem(id);
-			const status = statuses.getItem(contact.StatusID);
+			this._id = this.getParam("id", true);
+			this._contact = contacts.getItem(this._id);
+			const status = statuses.getItem(this._contact.StatusID);
 			const userInfo = {
 				status: status.Value,
 				statusIcon: `fas fa-${status.Icon}`,
-				...webix.copy(contact)
+				...webix.copy(this._contact)
 			};
 
 			this._getTemplate.parse(userInfo);
-			this._getLabel.setValue(contact.value);
+			this._getLabel.setValue(this._contact.value);
 		});
+	}
+
+	_deleteContactConfirm() {
+		const id = this._id;
+		if (!id && !contacts.exists(id)) {
+			return;
+		}
+		this.webix
+			.confirm({
+				type: "confirm-warning",
+				text: "Are you sure ?"
+			})
+			.then(() => {
+				this._deleteContactInActivity(id);
+				this._deleteContactInFiles(id);
+				contacts.remove(id);
+			});
+	}
+
+	_deleteContactInActivity(id) {
+		const findActivityItems = activities.find(item => item.ContactID.toString() === id.toString());
+		const getActivityItemsId = findActivityItems.map(item => item.id);
+		activities.remove(getActivityItemsId);
+	}
+
+	_deleteContactInFiles(id) {
+		const findFilesItems = files.find(item => item.ContactID.toString() === id.toString());
+		const getFilesItemsId = findFilesItems.map(item => item.id);
+		files.remove(getFilesItemsId);
 	}
 
 	get _getTemplate() {

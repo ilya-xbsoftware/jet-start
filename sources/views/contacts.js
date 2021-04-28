@@ -1,7 +1,6 @@
 import {JetView} from "webix-jet";
 
-import ContactsList from "./contactsDetails/contactsList";
-import DetailedInfo from "./contactsDetails/userInfo";
+import ContactsList from "./contacts-list";
 
 
 export default class Contacts extends JetView {
@@ -9,7 +8,7 @@ export default class Contacts extends JetView {
 		return {
 			cols: [
 				ContactsList,
-				{$subview: DetailedInfo}
+				{$subview: true}
 			]
 		};
 	}
