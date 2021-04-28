@@ -7,8 +7,7 @@ import contacts from "../models/contacts";
 import files from "../models/files";
 import statuses from "../models/statuses";
 import ContactTable from "./contacts-elements/contactTable";
-import ContactsFileController from "./contacts-elements/contactsFileController";
-
+import ContactsFileTable from "./contacts-elements/contactsFileTable";
 
 export default class DetailedInfo extends JetView {
 	config() {
@@ -138,7 +137,7 @@ export default class DetailedInfo extends JetView {
 						},
 						{
 							header: "Files",
-							body: ContactsFileController
+							body: ContactsFileTable
 						}
 					]
 				}

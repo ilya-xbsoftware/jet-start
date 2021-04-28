@@ -3,7 +3,7 @@ import {JetView} from "webix-jet";
 import contacts from "../../models/contacts";
 import files from "../../models/files";
 
-export default class ContactsFileController extends JetView {
+export default class ContactsFileTable extends JetView {
 	config() {
 		return {
 			rows: [
@@ -52,7 +52,6 @@ export default class ContactsFileController extends JetView {
 							autosend: false,
 							localId: "fileUploader",
 							width: 200,
-							css: "button--style",
 							label: "Upload file",
 							type: "icon",
 							icon: "wxi-plus-circle",

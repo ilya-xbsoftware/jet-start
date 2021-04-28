@@ -10,12 +10,11 @@ export default class ContactForm extends JetView {
 		return {
 			view: "form",
 			localId: "contactForm",
-			css: "contactBigForm",
 			elements: [
 				{
 					view: "label",
 					localId: "typeOfOperation",
-					css: "typeOfOperation",
+					css: "type-of-operation",
 					borderless: true,
 					height: 80
 				},
@@ -180,7 +179,7 @@ export default class ContactForm extends JetView {
 						{
 							view: "button",
 							label: "Cancel",
-							click: () => this.closeFrom()
+							click: () => this.closeFrom(this._urlId)
 						},
 						{
 							view: "button",
@@ -216,17 +215,16 @@ export default class ContactForm extends JetView {
 	}
 
 	closeFrom(id) {
+		const userId = id || contacts.getFirstId();
+
 		this._getForm.clear();
 		this._getForm.clearValidation();
-		if (id) {
-			this.app.callEvent(events.SELECT_LIST, [id]);
-		}
-		else {
-			this.app.callEvent(events.SELECT_LIST, [contacts.getFirstId()]);
-		}
+		this.app.callEvent(events.SELECT_LIST, [userId]);
 	}
 
 	_showContactForm(action, id) {
+		const actionText = this._actionText(action);
+
 		if (id && contacts.exists(id)) {
 			const contact = contacts.getItem(id);
 			const copyContact = webix.copy(contact);
@@ -237,22 +235,15 @@ export default class ContactForm extends JetView {
 			this._getForm.clear();
 		}
 
-		this._setTitleValue(action);
+		this._getLabel.setValue(`${actionText} new contact`);
+		this._twoActionsBtn.setValue(`${actionText}`);
 	}
 
-	_setTitleValue(action) {
-		switch (action) {
-			case "add":
-				this._getLabel.setValue("Add new contact");
-				this._twoActionsBtn.setValue("Add");
-				break;
-			case "edit":
-				this._getLabel.setValue("Edit contact");
-				this._twoActionsBtn.setValue("Edit");
-				break;
-			default:
-				this.closeFrom();
+	_actionText(action) {
+		if (action === "add") {
+			return "Add";
 		}
+		return "Edit";
 	}
 
 	_addOrEditContact() {
@@ -262,6 +253,7 @@ export default class ContactForm extends JetView {
 
 		if (!validateResult) {
 			this.webix.message({type: "error", text: "Look at the form !"});
+			return;
 		}
 
 		contacts.waitSave(() => {
@@ -279,12 +271,7 @@ export default class ContactForm extends JetView {
 	}
 
 	_deletePhoto() {
-		if (PLACEHOLDER_AVATAR_URL) {
-			this._userPhoto.setValues({Photo: PLACEHOLDER_AVATAR_URL});
-		}
-		else {
-			this._userPhoto.setValues({Photo: ""});
-		}
+		this._userPhoto.setValues({Photo: PLACEHOLDER_AVATAR_URL});
 	}
 
 	get _getTemplate() {
