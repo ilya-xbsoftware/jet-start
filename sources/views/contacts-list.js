@@ -16,13 +16,7 @@ export default class ContactsList extends JetView {
 					select: true,
 					scroll: "auto",
 					css: "contact-list",
-					template: userInfo => this._getUserTemplate(userInfo),
-					on: {
-						onAfterSelect: (id) => {
-							this.setParam("id", `${id}`, true);
-							this.show("../contacts-userInfo");
-						}
-					}
+					template: userInfo => this._getUserTemplate(userInfo)
 				},
 				{
 					view: "button",
@@ -34,26 +28,33 @@ export default class ContactsList extends JetView {
 	}
 
 	init() {
-		this.list = this.$$("contactsList");
-		this.list.sync(contacts);
+		this.$list.sync(contacts);
 
-		this.on(this.app, events.SELECT_LIST, (id) => {
-			this.list.select(id);
+		this.on(this.app, events.SELECT_LIST, (urlId) => {
+			const listFirstId = contacts.getFirstId();
+			const id = urlId || listFirstId;
+			this.$list.select(id);
 			this.show("../contacts-userInfo");
 		});
 	}
 
+	get $list() {
+		if (!this.list) {
+			this.list = this.$$("contactsList");
+		}
+		return this.list;
+	}
+
 	urlChange() {
 		contacts.waitData.then(() => {
-			const urlId = this.getParam("id");
+			const getUrlId = this.getParam("id");
 			const listFirstId = contacts.getFirstId();
-			const id = urlId || listFirstId;
-
+			const id = getUrlId || listFirstId;
 			if (id && contacts.exists(id)) {
-				this.list.select(id);
+				this.$list.select(id);
 			}
 			else {
-				this.list.select(listFirstId);
+				this.$list.select(listFirstId);
 			}
 		});
 	}

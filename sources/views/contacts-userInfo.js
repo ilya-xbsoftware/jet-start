@@ -175,6 +175,7 @@ export default class DetailedInfo extends JetView {
 				text: "Are you sure ?"
 			})
 			.then(() => {
+				this.app.callEvent(events.SELECT_LIST);
 				this._deleteContactInActivity(id);
 				this._deleteContactInFiles(id);
 				contacts.remove(id);

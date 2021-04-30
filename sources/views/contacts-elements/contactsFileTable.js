@@ -81,6 +81,7 @@ export default class ContactsFileTable extends JetView {
 	}
 
 	urlChange() {
+		this.$$("tableWithFiles").setState({filter: {}});
 		const urlId = this.getParam("id", true).toString();
 		if (!urlId && !contacts.exists(urlId)) {
 			return;
