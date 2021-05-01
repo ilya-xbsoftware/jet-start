@@ -6,7 +6,7 @@ export default class Menu extends JetView {
 	config() {
 		return {
 			view: "menu",
-			id: "top:menu",
+			id: "topMenu",
 			width: 200,
 			layout: "y",
 			select: true,
@@ -25,6 +25,6 @@ export default class Menu extends JetView {
 	}
 
 	init() {
-		this.use(plugins.Menu, "top:menu");
+		this.use(plugins.Menu, "topMenu");
 	}
 }

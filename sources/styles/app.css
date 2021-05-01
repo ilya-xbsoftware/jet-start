@@ -81,12 +81,12 @@
   padding-left: 200px;
 }
 
-.contact{
+.contact-list .contact{
   display: flex;
   align-items: center;
 }
 
-.contact img{
+.contact-list .contact img{
   width: 40px;
   height: 42px;
   border: 2px solid rgb(165, 182, 214);
@@ -94,7 +94,7 @@
   border-radius: 50px;
 }
 
-.contact p{
+.contact-list .contact p{
   margin-left: 20px;
   line-height: 20px;
 }
@@ -109,6 +109,10 @@
 }
 
 .detailed-info__name .webix_el_box{
+  font-size: 25px;
+}
+
+.type-of-operation .webix_el_box{
   font-size: 25px;
 }
 
@@ -174,6 +178,12 @@
   color: rgb(246, 153, 77);
  }
 
+ .status img{
+  width: 200px;
+  height: 200px;
+ }
+
+
 .info__item{
   display: flex;
   align-items: center;
@@ -186,4 +196,16 @@
 
  .template{
    border-top: none;
+ }
+
+ .uer-photo{
+   border:none;
+ }
+ .uer-photo .contact-for{
+  border: 2px solid rebeccapurple;
+ }
+
+ .contact-form img{
+  width: 200px;
+  height: 200px;
  }

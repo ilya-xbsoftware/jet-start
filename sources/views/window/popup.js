@@ -1,5 +1,6 @@
 import {JetView} from "webix-jet";
 
+import events from "../../constants/events";
 import activities from "../../models/activities";
 import activityTypes from "../../models/activityTypes";
 import contacts from "../../models/contacts";
@@ -43,6 +44,7 @@ export default class PopupView extends JetView {
 					{
 						view: "richselect",
 						label: "Contact",
+						localId: "contactId",
 						name: "ContactID",
 						options: {
 							view: "suggest",
@@ -103,6 +105,12 @@ export default class PopupView extends JetView {
 				}
 			}
 		};
+	}
+
+	init() {
+		this.on(this.app, events.SHOW_POPUP, (editingItem) => {
+			this.showWindow(editingItem);
+		});
 	}
 
 	get _getForm() {
