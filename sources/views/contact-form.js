@@ -247,7 +247,7 @@ export default class ContactForm extends JetView {
 			this.getForm.clear();
 		}
 
-		this._getLabel.setValue(this._changeLang("addNewContact", "editContact"));
+		this._getLabel.setValue(this._getActionText("addNewContact", "editContact"));
 		this._twoActionsBtn.setValue(actionButtons);
 	}
 
@@ -274,7 +274,7 @@ export default class ContactForm extends JetView {
 			.then((item) => {
 				this.webix.message({
 					type: "success",
-					text: this._changeLang("addedNewContact", "editedContact")
+					text: this._getActionText("addedNewContact", "editedContact")
 				});
 				this.closeFrom(item.id);
 			});
@@ -288,7 +288,7 @@ export default class ContactForm extends JetView {
 			});
 	}
 
-	_changeLang(addName, editName) {
+	_getActionText(addName, editName) {
 		const _ = this.app.getService("locale")._;
 		switch (this._action) {
 			case "add":
