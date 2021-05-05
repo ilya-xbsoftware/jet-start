@@ -15,12 +15,12 @@ export default {
 	tomorrow: "Завтра",
 	thisWeek: "На этой неделе",
 	thisMonth: "В этом месяце",
-	Language: "Язык",
-	English: "Английский",
-	Russian: "Русский",
-	addNew: "Добавить",
-	changePhoto: "изменить",
-	deletePhoto: "удалить",
+	language: "Язык",
+	english: "Английский",
+	russian: "Русский",
+	addNew: "Добавить новый",
+	changePhoto: "изменить фото",
+	deletePhoto: "удалить фото",
 	uploadFile: "обновить файлы",
 
 	// popup
@@ -66,17 +66,17 @@ export default {
 	edited: "Контакт был изменен",
 
 	// errors and notifications
-	areYouSure: "Вы уверены ?",
+	areYouSure: "Вы уверены?",
 	addedMessage: "Добавлено успешно",
-	ok: "ОК",
+	ok: "Да",
 	cancel: "Отмена",
 	emptyError: "Поле не должно быть пустым",
-	errorContactFormMessage: "Внимание на форму !",
-	closeContactForm: "Вы действительно хотите закрыть редкатор ? <br> все несохраненные данные будут удалены",
+	errorContactFormMessage: "Внимание на форму!",
+	closeContactForm: "Вы действительно хотите закрыть редкатор? <br> все несохраненные данные будут удалены",
 	enterValues: "Пожалуйста введите значения",
-	deletePhotoMessage: "Вы действительно хотите удалить фото ?",
-	update: "Сохранено !",
-	checkFields: "Пожалуйста, проверьте поля !",
+	deletePhotoMessage: "Вы действительно хотите удалить фото?",
+	update: "Обновлено!",
+	checkFields: "Пожалуйста, проверьте поля!",
 	noFilter: "В таблице нет фильтра",
 
 	// plaseholders

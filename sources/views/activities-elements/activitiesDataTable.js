@@ -6,7 +6,6 @@ import activityTypes from "../../models/activityTypes";
 import contacts from "../../models/contacts";
 import PopupView from "../window/popup";
 
-
 export default class ActivitiesDataTable extends JetView {
 	config() {
 		const _ = this.app.getService("locale")._;
@@ -117,7 +116,6 @@ export default class ActivitiesDataTable extends JetView {
 
 	_deleteActivity(id) {
 		const _ = this.app.getService("locale")._;
-
 		if (id) {
 			webix.confirm({
 				title: _("areYouSure"),
