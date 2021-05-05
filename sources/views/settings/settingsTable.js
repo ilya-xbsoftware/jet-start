@@ -1,5 +1,7 @@
 import {JetView} from "webix-jet";
 
+import {confirmMessage} from "../../utils/utils";
+
 export default class SettingsTable extends JetView {
 	constructor(app, name, data, icons) {
 		super(app, name);
@@ -66,11 +68,7 @@ export default class SettingsTable extends JetView {
 					onClick: {
 						"delete-btn": (e, id) => {
 							if (id) {
-								webix.confirm({
-									title: _("areYouSure"),
-									ok: _("ok"),
-									cancel: _("cancel")
-								})
+								confirmMessage(_, "areYouSure")
 									.then(() => {
 										this.data.remove(id);
 									});

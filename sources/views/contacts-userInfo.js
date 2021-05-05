@@ -6,6 +6,7 @@ import activities from "../models/activities";
 import contacts from "../models/contacts";
 import files from "../models/files";
 import statuses from "../models/statuses";
+import {confirmMessage} from "../utils/utils";
 import ContactTable from "./contacts-elements/contactTable";
 import ContactsFileTable from "./contacts-elements/contactsFileTable";
 
@@ -172,13 +173,7 @@ export default class DetailedInfo extends JetView {
 		if (!id && !contacts.exists(id)) {
 			return;
 		}
-		webix
-			.confirm({
-				type: "confirm-warning",
-				text: _("areYouSure"),
-				cancel: _("cancel"),
-				ok: _("ok")
-			})
+		confirmMessage(_, "areYouSure")
 			.then(() => {
 				this.app.callEvent(events.SELECT_LIST);
 				this._deleteContactInActivity(id);

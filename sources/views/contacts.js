@@ -1,5 +1,6 @@
 import {JetView} from "webix-jet";
 
+import {confirmMessage} from "../utils/utils";
 import ContactsList from "./contacts-list";
 
 
@@ -30,15 +31,11 @@ export default class Contacts extends JetView {
 		this.on(list, "onItemClick", (id) => {
 			const contactForm = this.getSubView().getForm;
 			if (this.getSubView().getParam("action") && contactForm.isDirty()) {
-				webix.confirm({
-					type: "confirm-warning",
-					text: _("closeContactForm"),
-					cancel: _("cancel"),
-					ok: _("ok")
-				}).then(() => {
-					this.show("./contacts-userInfo");
-					list.select(id);
-				});
+				confirmMessage(_, "closeContactForm")
+					.then(() => {
+						this.show("./contacts-userInfo");
+						list.select(id);
+					});
 				return false;
 			}
 			this.show("./contacts-userInfo");

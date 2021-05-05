@@ -4,6 +4,7 @@ import events from "../constants/events";
 import PLACEHOLDER_AVATAR_URL from "../constants/urls";
 import contacts from "../models/contacts";
 import statuses from "../models/statuses";
+import {confirmMessage} from "../utils/utils";
 
 export default class ContactForm extends JetView {
 	config() {
@@ -184,12 +185,8 @@ export default class ContactForm extends JetView {
 							label: _("cancel"),
 							click: () => {
 								if (this.getForm.isDirty()) {
-									webix.confirm({
-										type: "confirm-message",
-										text: _("closeContactForm"),
-										cancel: _("cancel"),
-										ok: _("ok")
-									}).then(() => this.closeFrom(this._urlId));
+									confirmMessage(_, "closeContactForm")
+										.then(() => this.closeFrom(this._urlId));
 									return false;
 								}
 								this.closeFrom(this._urlId);
@@ -290,12 +287,8 @@ export default class ContactForm extends JetView {
 
 	_deletePhoto() {
 		const _ = this.app.getService("locale")._;
-		webix
-			.confirm({
-				text: _("deletePhotoMessage"),
-				ok: _("ok"),
-				cancel: _("cancel")
-			}).then(() => {
+		confirmMessage(_, "deletePhotoMessage")
+			.then(() => {
 				this.userPhoto.setValues({Photo: PLACEHOLDER_AVATAR_URL});
 			});
 	}

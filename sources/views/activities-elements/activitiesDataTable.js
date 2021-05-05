@@ -4,6 +4,7 @@ import events from "../../constants/events";
 import activities from "../../models/activities";
 import activityTypes from "../../models/activityTypes";
 import contacts from "../../models/contacts";
+import {confirmMessage} from "../../utils/utils";
 import PopupView from "../window/popup";
 
 export default class ActivitiesDataTable extends JetView {
@@ -117,12 +118,7 @@ export default class ActivitiesDataTable extends JetView {
 	_deleteActivity(id) {
 		const _ = this.app.getService("locale")._;
 		if (id) {
-			webix.confirm({
-				title: _("areYouSure"),
-				ok: _("ok"),
-				cancel: _("cancel")
-
-			})
+			confirmMessage(_, "areYouSure")
 				.then(() => {
 					activities.remove(id);
 				});

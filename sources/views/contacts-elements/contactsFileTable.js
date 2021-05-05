@@ -2,6 +2,7 @@ import {JetView} from "webix-jet";
 
 import contacts from "../../models/contacts";
 import files from "../../models/files";
+import {confirmMessage} from "../../utils/utils";
 
 export default class ContactsFileTable extends JetView {
 	config() {
@@ -99,11 +100,8 @@ export default class ContactsFileTable extends JetView {
 		const _ = this.app.getService("locale")._;
 
 		if (id) {
-			webix.confirm({
-				title: _("areYouSure"),
-				ok: _("ok"),
-				cancel: _("cancel")
-			}).then(() => files.remove(id));
+			confirmMessage(_, "areYouSure")
+				.then(() => files.remove(id));
 		}
 	}
 }
