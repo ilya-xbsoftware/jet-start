@@ -62,8 +62,8 @@ export default {
 	birthday: "Birthday",
 	addNewContact: "Add new contact",
 	editContact: "Edit contact",
-	added: "New contact added",
-	edited: "Contact was changed",
+	addedNewContact: "New contact added",
+	editedContact: "Contact was changed",
 
 	// errors and notifications
 	areYouSure: "Are you sure?",

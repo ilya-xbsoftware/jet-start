@@ -235,15 +235,6 @@ export default class ContactForm extends JetView {
 
 	_showContactForm(action, id) {
 		const _ = this.app.getService("locale")._;
-		const formTitle = () => {
-			switch (action) {
-				case "add":
-					return _("addNewContact");
-				case "edit":
-					return _("editContact");
-				default: return "N/A";
-			}
-		};
 		const actionButtons = _(action);
 
 		if (id && contacts.exists(id)) {
@@ -256,7 +247,7 @@ export default class ContactForm extends JetView {
 			this.getForm.clear();
 		}
 
-		this._getLabel.setValue(formTitle());
+		this._getLabel.setValue(this._changeLang("addNewContact", "editContact"));
 		this._twoActionsBtn.setValue(actionButtons);
 	}
 
@@ -264,6 +255,7 @@ export default class ContactForm extends JetView {
 		const _ = this.app.getService("locale")._;
 		const formData = this.getForm.getValues();
 		const validateResult = this.getForm.validate();
+
 		formData.Photo = this.userPhoto.getValues().Photo;
 
 		if (!validateResult) {
@@ -280,7 +272,10 @@ export default class ContactForm extends JetView {
 			}
 		})
 			.then((item) => {
-				this.webix.message({type: "success", text: _(`${this._action}ed`)});
+				this.webix.message({
+					type: "success",
+					text: this._changeLang("addedNewContact", "editedContact")
+				});
 				this.closeFrom(item.id);
 			});
 	}
@@ -291,6 +286,17 @@ export default class ContactForm extends JetView {
 			.then(() => {
 				this.userPhoto.setValues({Photo: PLACEHOLDER_AVATAR_URL});
 			});
+	}
+
+	_changeLang(addName, editName) {
+		const _ = this.app.getService("locale")._;
+		switch (this._action) {
+			case "add":
+				return _(addName);
+			case "edit":
+				return _(editName);
+			default: return "N/A";
+		}
 	}
 
 	get _getLabel() {

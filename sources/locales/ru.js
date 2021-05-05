@@ -62,8 +62,8 @@ export default {
 	birthday: "Дата рождения",
 	addNewContact: "новый контакт",
 	editContact: "Редактировать контакт",
-	added: "Новый контакт добавлен",
-	edited: "Контакт был изменен",
+	addedNewContact: "Новый контакт добавлен",
+	editedContact: "Контакт был изменен",
 
 	// errors and notifications
 	areYouSure: "Вы уверены?",
