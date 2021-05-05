@@ -51,6 +51,18 @@ export default class SettingsTable extends JetView {
 					scrollY: true,
 					editable: true,
 					editaction: "dblclick",
+					on: {
+						onBeforeEditStop: (state) => {
+							if (!state.value) {
+								webix.message({
+									type: "error",
+									text: _("emptyError")
+								});
+								return false;
+							}
+							return true;
+						}
+					},
 					onClick: {
 						"delete-btn": (e, id) => {
 							if (id) {
@@ -95,7 +107,6 @@ export default class SettingsTable extends JetView {
 		this._iconInput = this.$$("inputIcon");
 		this.getInputHeader = this.$$("valueHeader");
 	}
-
 
 	_addNewRow() {
 		const _ = this.app.getService("locale")._;
