@@ -5,6 +5,8 @@ import files from "../../models/files";
 
 export default class ContactsFileTable extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return {
 			rows: [
 				{
@@ -16,20 +18,20 @@ export default class ContactsFileTable extends JetView {
 					columns: [
 						{
 							id: "name",
-							header: "Name",
+							header: _("name"),
 							sort: "text",
 							fillspace: true
 						},
 						{
 							id: "date",
-							header: "Change date",
+							header: _("changeDate"),
 							sort: "date",
 							format: webix.i18n.longDateFormatStr,
 							fillspace: 1
 						},
 						{
 							id: "sizeText",
-							header: "Size",
+							header: _("size"),
 							sort: this._sortSize,
 							fillspace: 1
 						},
@@ -52,7 +54,7 @@ export default class ContactsFileTable extends JetView {
 							autosend: false,
 							localId: "fileUploader",
 							width: 200,
-							label: "Upload file",
+							label: _("uploadFile"),
 							type: "icon",
 							icon: "wxi-plus-circle",
 							on: {
@@ -94,9 +96,14 @@ export default class ContactsFileTable extends JetView {
 	}
 
 	_deleteFile(id) {
+		const _ = this.app.getService("locale")._;
+
 		if (id) {
-			webix.confirm({type: "confirm-message", text: "Are you sure?"})
-				.then(() => files.remove(id));
+			webix.confirm({
+				title: _("areYouSure"),
+				ok: _("ok"),
+				cancel: _("cancel")
+			}).then(() => files.remove(id));
 		}
 	}
 }

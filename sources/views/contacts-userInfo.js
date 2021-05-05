@@ -11,6 +11,8 @@ import ContactsFileTable from "./contacts-elements/contactsFileTable";
 
 export default class DetailedInfo extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return {
 			rows: [
 				{
@@ -39,7 +41,7 @@ export default class DetailedInfo extends JetView {
 											icon: "fas fa-trash-alt",
 											localId: "deleteContact",
 											type: "icon",
-											label: "Delete",
+											label: _("delete"),
 											autowidth: true,
 											css: "detailed-info__button_delete webix_transparent",
 											click: () => this._deleteContactConfirm()
@@ -48,7 +50,7 @@ export default class DetailedInfo extends JetView {
 											view: "button",
 											icon: "fas fa-edit",
 											type: "icon",
-											label: "Edit",
+											label: _("edit"),
 											autowidth: true,
 											css: "detailed-info__button_edit webix_transparent",
 											click: () => this.show("./contact-form?action=edit")
@@ -111,7 +113,7 @@ export default class DetailedInfo extends JetView {
 					loacalId: "tabbar",
 					cells: [
 						{
-							header: "Activities",
+							header: _("activities"),
 							body: {
 								rows: [
 									ContactTable,
@@ -120,7 +122,7 @@ export default class DetailedInfo extends JetView {
 											{},
 											{
 												view: "button",
-												label: "+ Add activity",
+												label: `+ ${_("addActivity")}`,
 												type: "icon",
 												align: "right",
 												width: 200,
@@ -136,7 +138,7 @@ export default class DetailedInfo extends JetView {
 
 						},
 						{
-							header: "Files",
+							header: _("files"),
 							body: ContactsFileTable
 						}
 					]
@@ -165,14 +167,17 @@ export default class DetailedInfo extends JetView {
 	}
 
 	_deleteContactConfirm() {
+		const _ = this.app.getService("locale")._;
 		const id = this._id;
 		if (!id && !contacts.exists(id)) {
 			return;
 		}
-		this.webix
+		webix
 			.confirm({
 				type: "confirm-warning",
-				text: "Are you sure ?"
+				text: _("areYouSure"),
+				cancel: _("cancel"),
+				ok: _("ok")
 			})
 			.then(() => {
 				this.app.callEvent(events.SELECT_LIST);

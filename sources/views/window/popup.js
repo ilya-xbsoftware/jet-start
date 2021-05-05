@@ -7,6 +7,8 @@ import contacts from "../../models/contacts";
 
 export default class PopupView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return {
 			view: "window",
 			localId: "popup",
@@ -14,7 +16,15 @@ export default class PopupView extends JetView {
 			move: true,
 			modal: true,
 			head: {
-				template: "#title# activity",
+				template: (obj) => {
+					switch (obj.title) {
+						case "Edit":
+							return _("editActivity");
+						case "Add":
+							return _("addNewActivity");
+						default: return "popup";
+					}
+				},
 				localId: "title"
 			},
 			width: 600,
@@ -24,12 +34,12 @@ export default class PopupView extends JetView {
 				elements: [
 					{
 						view: "textarea",
-						label: "Details",
+						label: _("details"),
 						name: "Details"
 					},
 					{
 						view: "richselect",
-						label: "Type",
+						label: _("type"),
 						name: "TypeID",
 						options: {
 							view: "suggest",
@@ -39,11 +49,11 @@ export default class PopupView extends JetView {
 								template: "#value#"
 							}
 						},
-						invalidMessage: "Type must not be empty"
+						invalidMessage: _("emptyError")
 					},
 					{
 						view: "richselect",
-						label: "Contact",
+						label: _("contact"),
 						localId: "contactId",
 						name: "ContactID",
 						options: {
@@ -54,18 +64,18 @@ export default class PopupView extends JetView {
 								template: "#value#"
 							}
 						},
-						invalidMessage: "Contact must not be empty"},
+						invalidMessage: _("emptyError")},
 					{
 						cols: [
 							{
 								view: "datepicker",
-								label: "Date",
+								label: _("date"),
 								name: "DueDate",
 								format: webix.i18n.longDateFormatStr
 							},
 							{
 								view: "datepicker",
-								label: "Time",
+								label: _("time"),
 								name: "Time",
 								type: "time",
 								format: webix.i18n.timeFormat,
@@ -75,7 +85,7 @@ export default class PopupView extends JetView {
 					},
 					{
 						view: "checkbox",
-						labelRight: "Completed",
+						labelRight: _("completed"),
 						name: "State"
 					},
 					{
@@ -91,7 +101,7 @@ export default class PopupView extends JetView {
 									},
 									{
 										view: "button",
-										value: "Cancel",
+										value: _("cancel"),
 										click: () => this.hideWindow()
 									}
 								]
@@ -130,8 +140,10 @@ export default class PopupView extends JetView {
 	}
 
 	_saveAction() {
+		const _ = this.app.getService("locale")._;
+
 		if (!this._getForm.validate()) {
-			webix.message({text: "Please check fields", type: "error"});
+			webix.message({text: _("checkFields"), type: "error"});
 		}
 		else {
 			const formData = this._getForm.getValues();
@@ -155,15 +167,16 @@ export default class PopupView extends JetView {
 					activities.add(formData);
 				}
 			}).then(() => {
-				webix.message({text: "Updated successfully !", type: "success"});
+				webix.message({text: _("update"), type: "success"});
 				this.hideWindow();
 			});
 		}
 	}
 
 	showWindow(editingItem) {
+		const _ = this.app.getService("locale")._;
 		const popupTitle = editingItem ? "Edit" : "Add";
-		const button = editingItem ? "Save" : "Add";
+		const button = editingItem ? _("save") : _("add");
 
 		this.$$("nameChangingBtn").setValue(button);
 		this.$$("title").setValues({title: popupTitle});

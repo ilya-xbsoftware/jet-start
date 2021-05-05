@@ -9,6 +9,8 @@ import PopupView from "../window/popup";
 
 export default class ActivitiesDataTable extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return 	{
 			view: "datatable",
 			localId: "datatable",
@@ -24,15 +26,15 @@ export default class ActivitiesDataTable extends JetView {
 				},
 				{
 					id: "TypeID",
-					header: ["Activity type", {content: "selectFilter"}],
-					sort: "string",
+					header: [_("activityType"), {content: "selectFilter"}],
+					sort: "text",
 					collection: activityTypes,
 					fillspace: 1,
 					minWidth: 100
 				},
 				{
 					id: "DueDate",
-					header: ["Due date", {
+					header: [_("dueDate"), {
 						content: "datepickerFilter",
 						compare(value, filter) {
 							if (webix.isDate(value)) {
@@ -50,14 +52,14 @@ export default class ActivitiesDataTable extends JetView {
 				},
 				{
 					id: "Details",
-					header: ["Details", {content: "textFilter"}],
+					header: [_("details"), {content: "textFilter"}],
 					sort: "text",
 					fillspace: 3,
 					minWidth: 300
 				},
 				{
 					id: "ContactID",
-					header: ["Contact", {content: "selectFilter"}],
+					header: [_("contact"), {content: "selectFilter"}],
 					collection: contacts,
 					sort: "text",
 					fillspace: 1,
@@ -90,12 +92,9 @@ export default class ActivitiesDataTable extends JetView {
 		this._dataTable = this.$$("datatable");
 		this._activitiesCollection = activities;
 		this._dataTable.sync(activities);
-		this.collectionFilter();
+		activities.filter();
+		this._dataTable.filterByAll();
 		this.initPopupView();
-	}
-
-	collectionFilter() {
-		this._activitiesCollection.filter();
 	}
 
 	initPopupView() {
@@ -117,11 +116,25 @@ export default class ActivitiesDataTable extends JetView {
 	}
 
 	_deleteActivity(id) {
+		const _ = this.app.getService("locale")._;
+
 		if (id) {
-			webix.confirm("Are you sure?")
+			webix.confirm({
+				title: _("areYouSure"),
+				ok: _("ok"),
+				cancel: _("cancel")
+
+			})
 				.then(() => {
 					activities.remove(id);
 				});
 		}
+	}
+
+	get $activitiesTable() {
+		if (!this._dataTable) {
+			this._dataTable = this.$$("datatable");
+		}
+		return this._dataTable;
 	}
 }

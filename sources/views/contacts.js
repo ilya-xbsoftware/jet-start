@@ -19,6 +19,7 @@ export default class Contacts extends JetView {
 	}
 
 	ready() {
+		const _ = this.app.getService("locale")._;
 		const list = this.contactsList.$list;
 
 		this.on(list, "onAfterSelect", (id) => {
@@ -30,8 +31,10 @@ export default class Contacts extends JetView {
 			const contactForm = this.getSubView().getForm;
 			if (this.getSubView().getParam("action") && contactForm.isDirty()) {
 				webix.confirm({
-					type: "confirm-message",
-					text: "Do you wnat to close editor ? <br> All not saved data will be lost"
+					type: "confirm-warning",
+					text: _("closeContactForm"),
+					cancel: _("cancel"),
+					ok: _("ok")
 				}).then(() => {
 					this.show("./contacts-userInfo");
 					list.select(id);

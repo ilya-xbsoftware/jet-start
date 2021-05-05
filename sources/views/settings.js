@@ -1,69 +1,47 @@
 import {JetView} from "webix-jet";
 
 import activityTypes from "../models/activityTypes";
+import icons from "../models/icons";
 import statuses from "../models/statuses";
 import settingsChangeLang from "./settings/settingsChangeLang";
 import SettingsTable from "./settings/settingsTable";
 
 export default class Settings extends JetView {
+	constructor(app, name) {
+		super(app, name);
+		this.activityTable = new SettingsTable(this.app, "", activityTypes, icons.activity);
+		this.contactTable = new SettingsTable(this.app, "", statuses, icons.contact);
+	}
+
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return {
 			padding: 30,
 			rows: [
 				{
-					cols: [
-						{
-							rows: [
-								{
-									rows: [
-										settingsChangeLang
-									]
-								},
-								{
-									view: "form",
-									cols: [
-										{
-											view: "text",
-											localId: "inputValue"
-										},
-										{
-											view: "button",
-											value: "Add new",
-											width: 100,
-											css: "webix_primary",
-											click: () => this._addNewRow()
-										},
-										{}
-									]
-								},
-								{
-									view: "tabview",
-									cells: [
-										{
-											header: "Activity types",
-											id: "settingsActivityTypes",
-											body: new SettingsTable(this.app, "", activityTypes, "activity")
-										},
-										{
-											header: "Contact statuses",
-											id: "settingsContactStatuses",
-											body: new SettingsTable(this.app, "", statuses, "contact")
-										}
-									]
-								}
-							]
-						}
+					padding: 30,
+					rows: [
+						settingsChangeLang
 					]
 				},
-				{}
+				{
+					view: "tabview",
+					localId: "tabView",
+					cells: [
+						{
+							header: _("activityTypes"),
+							id: "settingsActivityTypes",
+							body: this.activityTable
+						},
+						{
+							header: _("contactStatuses"),
+							id: "settingsContactStatuses",
+							body: this.contactTable
+						}
+					]
+				}
 			]
 		};
-	}
-
-	_addNewRow() {
-		const getInputValue = this.$$("inputValue").getValue();
-		if (getInputValue) {
-
-		}
 	}
 }
