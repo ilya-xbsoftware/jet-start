@@ -4,16 +4,18 @@ import events from "../../constants/events";
 import activities from "../../models/activities";
 import activityTypes from "../../models/activityTypes";
 import contacts from "../../models/contacts";
+import {confirmMessage} from "../../utils/utils";
 import PopupView from "../window/popup";
-
 
 export default class ActivitiesDataTable extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return 	{
 			view: "datatable",
 			localId: "datatable",
 			scrollX: false,
-			scroll: "auto",
+			scrollY: "auto",
 			select: true,
 			columns: [
 				{
@@ -24,15 +26,19 @@ export default class ActivitiesDataTable extends JetView {
 				},
 				{
 					id: "TypeID",
-					header: ["Activity type", {content: "selectFilter"}],
-					sort: "string",
+					header: [
+						_("activityType"),
+						{content: "multiSelectFilter"}
+					],
+					sort: "text",
 					collection: activityTypes,
+					template: obj => this._getActivityCloumnTemplate(obj.TypeID),
 					fillspace: 1,
 					minWidth: 100
 				},
 				{
 					id: "DueDate",
-					header: ["Due date", {
+					header: [_("dueDate"), {
 						content: "datepickerFilter",
 						compare(value, filter) {
 							if (webix.isDate(value)) {
@@ -50,14 +56,14 @@ export default class ActivitiesDataTable extends JetView {
 				},
 				{
 					id: "Details",
-					header: ["Details", {content: "textFilter"}],
+					header: [_("details"), {content: "textFilter"}],
 					sort: "text",
 					fillspace: 3,
 					minWidth: 300
 				},
 				{
 					id: "ContactID",
-					header: ["Contact", {content: "selectFilter"}],
+					header: [_("contact"), {content: "richSelectFilter"}],
 					collection: contacts,
 					sort: "text",
 					fillspace: 1,
@@ -90,12 +96,9 @@ export default class ActivitiesDataTable extends JetView {
 		this._dataTable = this.$$("datatable");
 		this._activitiesCollection = activities;
 		this._dataTable.sync(activities);
-		this.collectionFilter();
+		activities.filter();
+		this._dataTable.filterByAll();
 		this.initPopupView();
-	}
-
-	collectionFilter() {
-		this._activitiesCollection.filter();
 	}
 
 	initPopupView() {
@@ -117,11 +120,29 @@ export default class ActivitiesDataTable extends JetView {
 	}
 
 	_deleteActivity(id) {
+		const _ = this.app.getService("locale")._;
 		if (id) {
-			webix.confirm("Are you sure?")
+			confirmMessage(_, "areYouSure")
 				.then(() => {
 					activities.remove(id);
 				});
 		}
+	}
+
+	_getActivityCloumnTemplate(id) {
+		const getActivityTypeItem = activityTypes.getItem(id);
+		const icon = getActivityTypeItem && getActivityTypeItem.Icon ? getActivityTypeItem.Icon : "remove-format";
+		const activity = getActivityTypeItem && getActivityTypeItem.Value ? getActivityTypeItem.Value : "n/a";
+		return `<div class="activity-column-icons">
+              <i class="fas fa-${icon}"></i>
+              <span>${activity}</span>
+            </div>`;
+	}
+
+	get $activitiesTable() {
+		if (!this._dataTable) {
+			this._dataTable = this.$$("datatable");
+		}
+		return this._dataTable;
 	}
 }

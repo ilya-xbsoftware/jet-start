@@ -6,11 +6,14 @@ import activities from "../models/activities";
 import contacts from "../models/contacts";
 import files from "../models/files";
 import statuses from "../models/statuses";
+import {confirmMessage} from "../utils/utils";
 import ContactTable from "./contacts-elements/contactTable";
 import ContactsFileTable from "./contacts-elements/contactsFileTable";
 
 export default class DetailedInfo extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return {
 			rows: [
 				{
@@ -39,7 +42,7 @@ export default class DetailedInfo extends JetView {
 											icon: "fas fa-trash-alt",
 											localId: "deleteContact",
 											type: "icon",
-											label: "Delete",
+											label: _("delete"),
 											autowidth: true,
 											css: "detailed-info__button_delete webix_transparent",
 											click: () => this._deleteContactConfirm()
@@ -48,7 +51,7 @@ export default class DetailedInfo extends JetView {
 											view: "button",
 											icon: "fas fa-edit",
 											type: "icon",
-											label: "Edit",
+											label: _("edit"),
 											autowidth: true,
 											css: "detailed-info__button_edit webix_transparent",
 											click: () => this.show("./contact-form?action=edit")
@@ -111,7 +114,7 @@ export default class DetailedInfo extends JetView {
 					loacalId: "tabbar",
 					cells: [
 						{
-							header: "Activities",
+							header: _("activities"),
 							body: {
 								rows: [
 									ContactTable,
@@ -120,7 +123,7 @@ export default class DetailedInfo extends JetView {
 											{},
 											{
 												view: "button",
-												label: "+ Add activity",
+												label: `+ ${_("addActivity")}`,
 												type: "icon",
 												align: "right",
 												width: 200,
@@ -136,7 +139,7 @@ export default class DetailedInfo extends JetView {
 
 						},
 						{
-							header: "Files",
+							header: _("files"),
 							body: ContactsFileTable
 						}
 					]
@@ -153,27 +156,25 @@ export default class DetailedInfo extends JetView {
 			this._id = this.getParam("id", true);
 			this._contact = contacts.getItem(this._id);
 			const status = statuses.getItem(this._contact.StatusID);
+			const statusText = status && status.Value ? status.Value : "N/A";
+			const icon = status && status.Icon ? status.Icon : "remove-format";
 			const userInfo = {
-				status: status.Value,
-				statusIcon: `fas fa-${status.Icon}`,
+				status: statusText,
+				statusIcon: `fas fa-${icon}`,
 				...webix.copy(this._contact)
 			};
-
 			this._getTemplate.parse(userInfo);
 			this._getLabel.setValue(this._contact.value);
 		});
 	}
 
 	_deleteContactConfirm() {
+		const _ = this.app.getService("locale")._;
 		const id = this._id;
 		if (!id && !contacts.exists(id)) {
 			return;
 		}
-		this.webix
-			.confirm({
-				type: "confirm-warning",
-				text: "Are you sure ?"
-			})
+		confirmMessage(_, "areYouSure")
 			.then(() => {
 				this.app.callEvent(events.SELECT_LIST);
 				this._deleteContactInActivity(id);

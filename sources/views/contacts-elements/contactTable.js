@@ -10,10 +10,8 @@ export default class ContactTable extends ActivitiesDataTable {
 	urlChange() {
 		const id = this.getParam("id", true);
 		this._dataTable.setState({filter: {}});
-		this._activitiesCollection.waitData.then(() => {
-			this._activitiesCollection
-				.filter(activitie => activitie.ContactID.toString() === id.toString());
-		});
+		this._activitiesCollection
+			.filter(activitie => activitie.ContactID.toString() === id.toString());
 	}
 
 	initPopupView() {

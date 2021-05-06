@@ -4,9 +4,12 @@ import events from "../constants/events";
 import PLACEHOLDER_AVATAR_URL from "../constants/urls";
 import contacts from "../models/contacts";
 import statuses from "../models/statuses";
+import {confirmMessage} from "../utils/utils";
 
 export default class ContactForm extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return {
 			view: "form",
 			localId: "contactForm",
@@ -26,29 +29,29 @@ export default class ContactForm extends JetView {
 							rows: [
 								{
 									view: "text",
-									label: "First name",
+									label: _("firstName"),
 									name: "FirstName",
 									validate: webix.rules.isNotEmpty,
-									invalidMessage: "Can not be empty"
+									invalidMessage: _("emptyError")
 								},
 								{
 									view: "text",
-									label: "Last name",
+									label: _("lastName"),
 									name: "LastName",
 									validate: webix.rules.isNotEmpty,
-									invalidMessage: "Can not be empty"
+									invalidMessage: _("emptyError")
 								},
 								{
 									view: "datepicker",
-									label: "Joining date",
+									label: _("joiningDate"),
 									name: "StartDate",
 									format: webix.i18n.longDateFormatStr,
 									validate: webix.rules.isNotEmpty,
-									invalidMessage: "Can not be empty"
+									invalidMessage: _("emptyError")
 								},
 								{
-									view: "combo",
-									label: "Status",
+									view: "richselect",
+									label: _("status"),
 									name: "StatusID",
 									options: {
 										template: "#Value#",
@@ -58,35 +61,35 @@ export default class ContactForm extends JetView {
 										}
 									},
 									validate: webix.rules.isNotEmpty,
-									invalidMessage: "Can not be empty"
+									invalidMessage: _("emptyError")
 								},
 								{
 									view: "text",
-									label: "Job",
+									label: _("job"),
 									name: "Job",
 									validate: webix.rules.isNotEmpty,
-									invalidMessage: "Can not be empty"
+									invalidMessage: _("emptyError")
 								},
 								{
 									view: "text",
-									label: "Company",
+									label: _("company"),
 									name: "Company",
 									validate: webix.rules.isNotEmpty,
-									invalidMessage: "Can not be empty"
+									invalidMessage: _("emptyError")
 								},
 								{
 									view: "text",
-									label: "Website",
+									label: _("website"),
 									name: "Website",
 									validate: webix.rules.isNotEmpty,
-									invalidMessage: "Can not be empty"
+									invalidMessage: _("emptyError")
 								},
 								{
 									view: "text",
-									label: "Address",
+									label: _("address"),
 									name: "Address",
 									validate: webix.rules.isNotEmpty,
-									invalidMessage: "Can not be empty"
+									invalidMessage: _("emptyError")
 								}
 							]
 						},
@@ -95,32 +98,32 @@ export default class ContactForm extends JetView {
 							rows: [
 								{
 									view: "text",
-									label: "Email",
+									label: _("email"),
 									name: "Email",
 									validate: webix.rules.isNotEmpty,
-									invalidMessage: "Can not be empty"
+									invalidMessage: _("emptyError")
 								},
 								{
 									view: "text",
-									label: "Skype",
+									label: _("skype"),
 									name: "Skype",
 									validate: webix.rules.isNotEmpty,
-									invalidMessage: "Can not be empty"
+									invalidMessage: _("emptyError")
 								},
 								{
 									view: "text",
-									label: "Phone",
+									label: _("phone"),
 									name: "Phone",
 									validate: webix.rules.isNotEmpty,
-									invalidMessage: "Can not be empty"
+									invalidMessage: _("emptyError")
 								},
 								{
 									view: "datepicker",
-									label: "Birthday",
+									label: _("birthday"),
 									name: "Birthday",
 									format: webix.i18n.longDateFormatStr,
 									validate: webix.rules.isNotEmpty,
-									invalidMessage: "Can not be empty"
+									invalidMessage: _("emptyError")
 								},
 								{
 									cols: [
@@ -141,7 +144,8 @@ export default class ContactForm extends JetView {
 												{
 													view: "uploader",
 													localId: "photoUploader",
-													label: "Change photo",
+													label: _("changePhoto"),
+													autowidth: true,
 													css: "uploader-btn",
 													accept: "image/jpeg, image/png, image/jpg, image/JPG",
 													autosend: false,
@@ -160,7 +164,8 @@ export default class ContactForm extends JetView {
 												},
 												{
 													view: "button",
-													label: "Delete photo",
+													label: _("deletePhoto"),
+													autowidth: true,
 													css: "uploader-btn-delete",
 													click: () => this._deletePhoto()
 												}
@@ -179,13 +184,11 @@ export default class ContactForm extends JetView {
 						{},
 						{
 							view: "button",
-							label: "Cancel",
+							label: _("cancel"),
 							click: () => {
 								if (this.getForm.isDirty()) {
-									webix.confirm({
-										type: "confirm-message",
-										text: "Do you wnat to close editor ? <br> All not saved data will be lost"
-									}).then(() => this.closeFrom(this._urlId));
+									confirmMessage(_, "closeContactForm")
+										.then(() => this.closeFrom(this._urlId));
 									return false;
 								}
 								this.closeFrom(this._urlId);
@@ -233,7 +236,8 @@ export default class ContactForm extends JetView {
 	}
 
 	_showContactForm(action, id) {
-		const actionText = this._actionText(action);
+		const _ = this.app.getService("locale")._;
+		const actionButtons = _(action);
 
 		if (id && contacts.exists(id)) {
 			const contact = contacts.getItem(id);
@@ -245,24 +249,19 @@ export default class ContactForm extends JetView {
 			this.getForm.clear();
 		}
 
-		this._getLabel.setValue(`${actionText} new contact`);
-		this._twoActionsBtn.setValue(`${actionText}`);
-	}
-
-	_actionText(action) {
-		if (action === "add") {
-			return "Add";
-		}
-		return "Edit";
+		this._getLabel.setValue(this._getActionText("addNewContact", "editContact"));
+		this._twoActionsBtn.setValue(actionButtons);
 	}
 
 	_addOrEditContact() {
+		const _ = this.app.getService("locale")._;
 		const formData = this.getForm.getValues();
 		const validateResult = this.getForm.validate();
+
 		formData.Photo = this.userPhoto.getValues().Photo;
 
 		if (!validateResult) {
-			this.webix.message({type: "error", text: "Look at the form !"});
+			this.webix.message({type: "error", text: _("errorContactFormMessage")});
 			return;
 		}
 
@@ -275,13 +274,31 @@ export default class ContactForm extends JetView {
 			}
 		})
 			.then((item) => {
-				this.webix.message({type: "success", text: `New contact ${this._action}ed`});
+				this.webix.message({
+					type: "success",
+					text: this._getActionText("addedNewContact", "editedContact")
+				});
 				this.closeFrom(item.id);
 			});
 	}
 
 	_deletePhoto() {
-		this.userPhoto.setValues({Photo: PLACEHOLDER_AVATAR_URL});
+		const _ = this.app.getService("locale")._;
+		confirmMessage(_, "deletePhotoMessage")
+			.then(() => {
+				this.userPhoto.setValues({Photo: PLACEHOLDER_AVATAR_URL});
+			});
+	}
+
+	_getActionText(addName, editName) {
+		const _ = this.app.getService("locale")._;
+		switch (this._action) {
+			case "add":
+				return _(addName);
+			case "edit":
+				return _(editName);
+			default: return "N/A";
+		}
 	}
 
 	get _getLabel() {

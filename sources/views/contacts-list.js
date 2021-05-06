@@ -6,8 +6,18 @@ import contacts from "../models/contacts";
 
 export default class ContactsList extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return {
 			rows: [
+				{
+					view: "text",
+					localId: "listFilter",
+					placeholder: _("findContacts"),
+					on: {
+						onTimedKeyPress: () => this._filterList()
+					}
+				},
 				{
 					view: "list",
 					localId: "contactsList",
@@ -20,7 +30,7 @@ export default class ContactsList extends JetView {
 				},
 				{
 					view: "button",
-					label: "Add contact",
+					label: _("addContact"),
 					click: () => this.show("./contact-form?action=add")
 				}
 			]
@@ -29,7 +39,7 @@ export default class ContactsList extends JetView {
 
 	init() {
 		this.$list.sync(contacts);
-
+		this.listFilter = this.$$("listFilter");
 		this.on(this.app, events.SELECT_LIST, (urlId) => {
 			const listFirstId = contacts.getFirstId();
 			const id = urlId || listFirstId;
@@ -68,5 +78,13 @@ export default class ContactsList extends JetView {
                 <p><strong> ${userData.value}</strong><br>${userData.Company}</p>
               </div>
             </div>`;
+	}
+
+	_filterList() {
+		const inputValue = this.listFilter.getValue().toLowerCase();
+		this.$list.filter(item => item.value.toLowerCase().indexOf(inputValue) !== -1 ||
+        item.Company.toLowerCase().indexOf(inputValue) !== -1 ||
+        item.Skype.toLowerCase().indexOf(inputValue) !== -1 ||
+        item.Address.toLowerCase().indexOf(inputValue) !== -1);
 	}
 }

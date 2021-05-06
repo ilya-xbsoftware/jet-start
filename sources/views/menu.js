@@ -4,6 +4,8 @@ import events from "../constants/events";
 
 export default class Menu extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return {
 			view: "menu",
 			id: "topMenu",
@@ -11,9 +13,9 @@ export default class Menu extends JetView {
 			layout: "y",
 			select: true,
 			data: [
-				{id: "contacts", value: "Contacts", icon: "fas fa-users"},
-				{id: "activities", value: "Activities", icon: "fas fa-cogs"},
-				{id: "settings", value: "Settings", icon: "fas fa-calendar-week"}
+				{id: "contacts", value: _("contacts"), icon: "fas fa-users"},
+				{id: "activities", value: _("activities"), icon: "fas fa-cogs"},
+				{id: "settings", value: _("settings"), icon: "fas fa-calendar-week"}
 			],
 			on: {
 				onAfterSelect(id) {

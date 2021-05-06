@@ -1,5 +1,6 @@
 import {JetView} from "webix-jet";
 
+import {confirmMessage} from "../utils/utils";
 import ContactsList from "./contacts-list";
 
 
@@ -19,6 +20,7 @@ export default class Contacts extends JetView {
 	}
 
 	ready() {
+		const _ = this.app.getService("locale")._;
 		const list = this.contactsList.$list;
 
 		this.on(list, "onAfterSelect", (id) => {
@@ -29,13 +31,11 @@ export default class Contacts extends JetView {
 		this.on(list, "onItemClick", (id) => {
 			const contactForm = this.getSubView().getForm;
 			if (this.getSubView().getParam("action") && contactForm.isDirty()) {
-				webix.confirm({
-					type: "confirm-message",
-					text: "Do you wnat to close editor ? <br> All not saved data will be lost"
-				}).then(() => {
-					this.show("./contacts-userInfo");
-					list.select(id);
-				});
+				confirmMessage(_, "closeContactForm")
+					.then(() => {
+						this.show("./contacts-userInfo");
+						list.select(id);
+					});
 				return false;
 			}
 			this.show("./contacts-userInfo");
