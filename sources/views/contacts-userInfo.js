@@ -155,13 +155,14 @@ export default class DetailedInfo extends JetView {
 		]).then(() => {
 			this._id = this.getParam("id", true);
 			this._contact = contacts.getItem(this._id);
-			const status = statuses.getItem(this._contact.StatusID);
+			const status = statuses.getItem(this._contact.StatusID) || false;
+			const statusText = status.Value || "N/A";
+			const icon = status.Icon || "remove-format";
 			const userInfo = {
-				status: status.Value,
-				statusIcon: `fas fa-${status.Icon}`,
+				status: statusText,
+				statusIcon: `fas fa-${icon}`,
 				...webix.copy(this._contact)
 			};
-
 			this._getTemplate.parse(userInfo);
 			this._getLabel.setValue(this._contact.value);
 		});

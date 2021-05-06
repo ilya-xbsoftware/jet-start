@@ -145,6 +145,7 @@ export default class ContactForm extends JetView {
 													view: "uploader",
 													localId: "photoUploader",
 													label: _("changePhoto"),
+													autowidth: true,
 													css: "uploader-btn",
 													accept: "image/jpeg, image/png, image/jpg, image/JPG",
 													autosend: false,
@@ -164,6 +165,7 @@ export default class ContactForm extends JetView {
 												{
 													view: "button",
 													label: _("deletePhoto"),
+													autowidth: true,
 													css: "uploader-btn-delete",
 													click: () => this._deletePhoto()
 												}

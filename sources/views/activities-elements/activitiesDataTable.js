@@ -130,8 +130,8 @@ export default class ActivitiesDataTable extends JetView {
 	}
 
 	_getActivityCloumnTemplate(item) {
-		const getActivityTypeData = activityTypes.getItem(item);
-		const icon = getActivityTypeData.Icon || "";
+		const getActivityTypeData = activityTypes.getItem(item) || false;
+		const icon = getActivityTypeData.Icon || "remove-format";
 		const activity = getActivityTypeData.Value || "n/a";
 		return `<div class="activity-column-icons">
               <i class="fas fa-${icon}"></i>
