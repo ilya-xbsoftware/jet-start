@@ -28,17 +28,25 @@ export default class SettingsTable extends JetView {
 						},
 						{
 							view: "richselect",
-							options: this.icons,
 							localId: "inputIcon",
 							label: _("icon"),
 							name: "icon",
+							options: {
+								body: {
+									data: this.icons,
+									template: obj => `<div class="settings-richselect-icons">
+                                      <i class="fas fa-${obj.value}"></i>
+                                      <span>${obj.value}</span>
+                                    </div>`
+								}
+							},
 							validate: webix.rules.isNotEmpty,
 							labelAlign: "center"
 						},
 						{
 							view: "button",
 							value: _("addNew"),
-							width: 100,
+							autowidth: true,
 							css: "webix_primary",
 							click: () => this._addNewRow()
 						},
@@ -86,7 +94,13 @@ export default class SettingsTable extends JetView {
 							id: "Icon",
 							header: _("icon"),
 							editor: "richselect",
-							options: this.icons,
+							suggest: {
+								body: {
+									template: obj => this._getIconColumnTemplate(obj.value)
+								}
+							},
+							collection: this.icons,
+							template: obj => this._getIconColumnTemplate(obj.Icon),
 							fillspace: true
 						},
 						{
@@ -104,6 +118,13 @@ export default class SettingsTable extends JetView {
 		this._typeInput = this.$$("inputType");
 		this._iconInput = this.$$("inputIcon");
 		this.getInputHeader = this.$$("valueHeader");
+	}
+
+	_getIconColumnTemplate(item) {
+		return `<div class="settings-richselect-icons">
+              <i class="fas fa-${item}"></i>
+              <span>${item}</span>
+            </div>`;
 	}
 
 	_addNewRow() {

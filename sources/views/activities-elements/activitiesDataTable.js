@@ -15,7 +15,7 @@ export default class ActivitiesDataTable extends JetView {
 			view: "datatable",
 			localId: "datatable",
 			scrollX: false,
-			scroll: "auto",
+			scrollY: "auto",
 			select: true,
 			columns: [
 				{
@@ -26,9 +26,13 @@ export default class ActivitiesDataTable extends JetView {
 				},
 				{
 					id: "TypeID",
-					header: [_("activityType"), {content: "selectFilter"}],
+					header: [
+						_("activityType"),
+						{content: "multiSelectFilter"}
+					],
 					sort: "text",
 					collection: activityTypes,
+					template: obj => this._getActivityCloumnTemplate(obj.TypeID),
 					fillspace: 1,
 					minWidth: 100
 				},
@@ -59,7 +63,7 @@ export default class ActivitiesDataTable extends JetView {
 				},
 				{
 					id: "ContactID",
-					header: [_("contact"), {content: "selectFilter"}],
+					header: [_("contact"), {content: "richSelectFilter"}],
 					collection: contacts,
 					sort: "text",
 					fillspace: 1,
@@ -123,6 +127,16 @@ export default class ActivitiesDataTable extends JetView {
 					activities.remove(id);
 				});
 		}
+	}
+
+	_getActivityCloumnTemplate(item) {
+		const getActivityTypeData = activityTypes.getItem(item);
+		const icon = getActivityTypeData.Icon || "";
+		const activity = getActivityTypeData.Value || "n/a";
+		return `<div class="activity-column-icons">
+              <i class="fas fa-${icon}"></i>
+              <span>${activity}</span>
+            </div>`;
 	}
 
 	get $activitiesTable() {

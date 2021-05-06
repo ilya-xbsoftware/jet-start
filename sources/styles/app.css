@@ -209,3 +209,13 @@
   width: 200px;
   height: 200px;
  }
+
+ .settings-richselect-icons i{
+   width: 5px;
+   margin-right: 20px;
+ }
+
+ .activity-column-icons i{
+  width: 5px;
+  margin-right: 20px;
+ }
