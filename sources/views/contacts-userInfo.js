@@ -155,9 +155,9 @@ export default class DetailedInfo extends JetView {
 		]).then(() => {
 			this._id = this.getParam("id", true);
 			this._contact = contacts.getItem(this._id);
-			const status = statuses.getItem(this._contact.StatusID) || false;
-			const statusText = status.Value || "N/A";
-			const icon = status.Icon || "remove-format";
+			const status = statuses.getItem(this._contact.StatusID);
+			const statusText = status && status.Value ? status.Value : "N/A";
+			const icon = status && status.Icon ? status.Icon : "remove-format";
 			const userInfo = {
 				status: statusText,
 				statusIcon: `fas fa-${icon}`,

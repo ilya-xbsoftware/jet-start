@@ -129,10 +129,10 @@ export default class ActivitiesDataTable extends JetView {
 		}
 	}
 
-	_getActivityCloumnTemplate(item) {
-		const getActivityTypeData = activityTypes.getItem(item) || false;
-		const icon = getActivityTypeData.Icon || "remove-format";
-		const activity = getActivityTypeData.Value || "n/a";
+	_getActivityCloumnTemplate(id) {
+		const getActivityTypeItem = activityTypes.getItem(id);
+		const icon = getActivityTypeItem && getActivityTypeItem.Icon ? getActivityTypeItem.Icon : "remove-format";
+		const activity = getActivityTypeItem && getActivityTypeItem.Value ? getActivityTypeItem.Value : "n/a";
 		return `<div class="activity-column-icons">
               <i class="fas fa-${icon}"></i>
               <span>${activity}</span>
